@@ -3,8 +3,8 @@ pipeline {
     stages {
         stage('Get_Dumps') {
             steps {
-                echo 'Hello world!!'
-                powershell '''$dumps= get-process  WmiPrvSE |select-object -ExpandProperty ID 
+                   
+                      powershell '''$dumps= get-process  WmiPrvSE |select-object -ExpandProperty ID 
                                foreach (\$dump in \$dumps)
                             {
                              C:\\Dump\\Procdump\\procdump64.exe  -ma  $dump c:\\temp\\dump.PID 
@@ -12,7 +12,7 @@ pipeline {
             
 
                 
-            }
+                  }
         }
     }
 }
