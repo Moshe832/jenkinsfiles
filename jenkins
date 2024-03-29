@@ -6,7 +6,7 @@ pipeline {
                 echo 'Hello world!!'
                 powershell 'get-process explorer |select-object name,id| format-list *'
               
-                $dumps=get-process WmiPrvSE |select-object -ExpandProperty ID 
+                $dumps=get-process 'WmiPrvSE' |select-object -ExpandProperty ID 
                                 
                 foreach ($dump in $dumps)
                 {
