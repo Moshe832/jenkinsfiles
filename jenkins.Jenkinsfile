@@ -6,7 +6,7 @@ pipeline {
                    
                   
                                   
-                                       bat ''' C:\\Dump\\Procdump\\procdump64.exe  -ma  11464 '''
+                                       bat ''' C:\\Dump\\Procdump\\procdump64.exe  -ma  notepad c:\\temp\dump.PID '''
                                
             
 
