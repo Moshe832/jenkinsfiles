@@ -5,8 +5,8 @@ pipeline {
             steps {
                    
                   
-                                  
-                                       bat ''' C:\\Dump\\Procdump\\procdump64.exe  -ma  notepad c:\\temp\\sdump.PID '''
+                               powershell '''  "E:\PowerShell\get-dump.ps1" '''
+                                
                                
             
 
