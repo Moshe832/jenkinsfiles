@@ -5,7 +5,7 @@ pipeline {
             steps {
                    
                   
-                               bat''' powershell E:\\PowerShell\\get-dump.ps1 '''
+                              bat 'C:\\Dump\\Procdump\\procdump64.exe  -ma 11464 '
                                 
                                
             
