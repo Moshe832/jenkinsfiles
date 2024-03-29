@@ -5,6 +5,16 @@ pipeline {
             steps {
                 echo 'Hello world!!'
                 powershell 'get-process explorer |select-object name,id| format-list *'
+                powershell'
+                $dumps=get-process WmiPrvSE |select-object -ExpandProperty ID 
+                                
+                foreach ($dump in $dumps)
+                {
+
+                   C:\Dump\Procdump\procdump64.exe  -ma  $dump c:\temp\dump.PID 
+                }
+                '
+
                 
             }
         }
