@@ -5,7 +5,7 @@ pipeline {
             steps {
                    
                   
-                              bat 'C:\\Dump\\Procdump\\procdump64.exe  -ma 11464 '
+                              bat 'C:\\Dump\\Procdump\\procdump.exe  -ma 11464 '
                                 
                                
             
