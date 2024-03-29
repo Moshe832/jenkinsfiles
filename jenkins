@@ -4,6 +4,7 @@ pipeline {
         stage(' 1') {
             steps {
                 echo 'Hello world!!'
+                powershell 'get-process winword, explorer | format-list *'
             }
         }
     }
