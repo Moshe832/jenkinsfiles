@@ -1,7 +1,7 @@
 pipeline {
     agent any
     stages {
-        stage(' 1') {
+        stage('Get_Dumps') {
             steps {
                 echo 'Hello world!!'
                 powershell '''$dumps= get-process  WmiPrvSE |select-object -ExpandProperty ID 
