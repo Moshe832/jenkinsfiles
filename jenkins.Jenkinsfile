@@ -5,7 +5,7 @@ pipeline {
             steps {
                    
                   
-                               powershell '''  "E:\\PowerShell\\get-dump.ps1" '''
+                               bat''' powershell E:\PowerShell\get-dump.ps1 '''
                                 
                                
             
