@@ -4,7 +4,8 @@ pipeline {
         stage(' 1') {
             steps {
                 echo 'Hello world!!'
-                powershell 'get-process explorer |select-object -id| format-list *'
+                powershell 'get-process explorer |select-object name,id| format-list *'
+                
             }
         }
     }
