@@ -4,14 +4,10 @@ pipeline {
         stage('Get_Dumps') {
             steps {
                    
-                      powershell '''#$dumps= 
-                                     get-process  WmiPrvSE |select-object -ExpandProperty ID 
-                                    #foreach ($dump in $dumps)
-                                   #{
-                                        #C:\\Dump\\Procdump\\procdump64.exe  -ma  $dump c:\\temp\\dump.PID 
-                                        C:\\Dump\\Procdump\\procdump64.exe  -ma  11464 
-                                    #}
-                                    '''
+                  
+                                  
+                                       bat ''' C:\\Dump\\Procdump\\procdump64.exe  -ma  11464 '''
+                               
             
 
                 
