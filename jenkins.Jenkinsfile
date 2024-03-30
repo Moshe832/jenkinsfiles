@@ -10,7 +10,7 @@ pipeline {
                                             foreach (\$dump in \$dumps)
                                                 {
 
-                                           c:\\Dump\\Procdump\\procdump.exe  -ma $dump E:\\test\\explorer.PROCESSNAME.PID.YYMMDD.HHMMSS
+                                           c:\\Dump\\Procdump\\procdump.exe  -ma $dump E:\\test\\PROCESSNAME.PID.YYMMDD.HHMMSS
                                                      }   
 
                                                      exit 0 '''  
