@@ -5,8 +5,8 @@ pipeline {
             steps {
                    
                              
-                              bat  '''C:\\Dump\\Procdump\\procdump.exe  -ma 4080'''
-                               EXIT /B %ERRORLEVEL%
+                              bat  '''C:\\Dump\\Procdump\\procdump.exe  -ma 4080
+                               EXIT /B %ERRORLEVEL%'''
                                 
                                
             
