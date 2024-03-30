@@ -5,7 +5,7 @@ pipeline {
             steps {
                    
                              
-                              bat  '''
+                              powershell  '''
                                     \$dumps=get-process - WmiPrvSE |select-object -ExpandProperty ID
                                             foreach (\$dump in \$dumps)
                                                 {
