@@ -6,13 +6,14 @@ pipeline {
                    
                              
                               bat  '''
-                              c:\\Dump\\Procdump\\procdump.exe  -ma 10012 E:\\test\\explorer.PROCESSNAME.PID.EXCEPTIONCODE.YYMMDD.HHMMSS
-                              exit /b 0 '''
-                                
-                               
-            
+                                    $dumps=get-process - WmiPrvSE |select-object -ExpandProperty ID
+                                            foreach ($dump in $dumps)
+                                                {
 
-                
+                                           c:\\Dump\\Procdump\\procdump.exe  -ma $dump E:\\test\\explorer.PROCESSNAME.PID.EXCEPTIONCODE.YYMMDD.HHMMSS
+                                                     }   
+
+                                                    exit /b 0 '''  
                   }
         }
     }
