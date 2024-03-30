@@ -4,8 +4,8 @@ pipeline {
         stage('Get_Dumps') {
             steps {
                    
-                  
-                              bat 'runas.exe /user:administrator C:\\Dump\\Procdump\\procdump.exe  -ma 114641'
+                             
+                              bat  C:\\Dump\\Procdump\\procdump.exe  -ma 114641'
                                 
                                
             
