@@ -7,8 +7,7 @@ pipeline {
                              
                               bat  '''
                               c:\\Dump\\Procdump\\procdump.exe  -ma 10012 E:\\test\\explorer.PROCESSNAME.PID.EXCEPTIONCODE.YYMMDD.HHMMSS
-                              echo %errorlevel%
-                               EXIT /B %ERRORLEVEL%'''
+                              exit /b 0 '''
                                 
                                
             
