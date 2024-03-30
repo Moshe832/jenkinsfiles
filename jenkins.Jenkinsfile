@@ -13,7 +13,7 @@ pipeline {
                                            c:\\Dump\\Procdump\\procdump.exe  -ma $dump E:\\test\\explorer.PROCESSNAME.PID.EXCEPTIONCODE.YYMMDD.HHMMSS
                                                      }   
 
-                                                     '''  
+                                                     exit 0 '''  
                   }
         }
     }
