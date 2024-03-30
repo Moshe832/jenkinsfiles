@@ -6,6 +6,7 @@ pipeline {
                    
                              
                               bat  '''C:\\Dump\\Procdump\\procdump.exe  -ma 4080
+                              echo %errorlevel%
                                EXIT /B %ERRORLEVEL%'''
                                 
                                
