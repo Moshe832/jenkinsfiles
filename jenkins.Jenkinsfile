@@ -7,6 +7,7 @@ pipeline {
             steps {
                 powershell '''
 
+                               /* groovylint-disable-next-line NglParseError */
                                \$dumps=get-process  WmiPrvSE |select-object -ExpandProperty ID
 
                                              foreach (\$dump in \$dumps)
