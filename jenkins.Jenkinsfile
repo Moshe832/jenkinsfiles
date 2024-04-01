@@ -5,8 +5,8 @@ pipeline {
     stages {
         stage('Get_Dumps') {
             steps {
-                powershell
-                '''
+                powershell '''
+
                                \$dumps=get-process  WmiPrvSE |select-object -ExpandProperty ID
 
                                              foreach (\$dump in \$dumps)
