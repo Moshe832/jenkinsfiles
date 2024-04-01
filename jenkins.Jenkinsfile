@@ -1,5 +1,6 @@
 
 pipeline {
+    options { timestamps() }
     agent any
     stages {
         stage('Get_Dumps') {
@@ -11,7 +12,7 @@ pipeline {
                                              foreach (\$dump in \$dumps)
                                                 {
 
-                                           c:\\Dump\\Procdump\\procdump.exe  -ma $dump E:\\test\\PROCESSNAME.PID.YYMMDD.HHMMSS
+                                    c:\\Dump\\Procdump\\procdump.exe  -ma $dump E:\\test\\PROCESSNAME.PID.YYMMDD
                                                 }
 
                                              exit 0
