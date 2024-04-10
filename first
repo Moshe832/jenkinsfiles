@@ -1,0 +1,17 @@
+
+/* groovylint-disable-next-line CompileStatic */
+pipeline {
+    options { timestamps() }
+    agent any
+    stages {
+        stage('hello') {
+            steps {
+                powershell '''
+
+                               write-host 'hello'
+
+                                             '''
+            }
+        }
+    }
+}

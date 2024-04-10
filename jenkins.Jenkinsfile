@@ -1,4 +1,5 @@
 
+/* groovylint-disable-next-line CompileStatic */
 pipeline {
     options { timestamps() }
     agent any
@@ -7,7 +8,6 @@ pipeline {
             steps {
                 powershell '''
 
-                               
                                \$dumps=get-process  WmiPrvSE |select-object -ExpandProperty ID
 
                                              foreach (\$dump in \$dumps)
