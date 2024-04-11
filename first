@@ -1,5 +1,4 @@
 
-/* groovylint-disable-next-line CompileStatic */
 pipeline {
     options { timestamps() }
     agent any
@@ -8,10 +7,9 @@ pipeline {
             steps {
                 powershell '''
 
-                               write-host 'hello'
-
-                                             '''
+                               write-host "hello"
+                               '''
             }
-        }
+        } 
     }
 }
