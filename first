@@ -8,6 +8,8 @@ pipeline {
                 powershell '''
 
                                write-host "hello"
+
+                               gci -path c:\node
                                '''
             }
         } 
