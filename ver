@@ -15,7 +15,7 @@ pipeline {
                 script {
                     foo = "bar"
                 }
-                bat ' ecoh "foo"
+                bat ' echo "foo"
                 '
             }
         }
