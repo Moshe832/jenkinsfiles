@@ -14,7 +14,7 @@ parameters{
 
                                write-host "hello"
 
-                               gci -path c:\node
+                               gci -path 'c:\node'
                                '''
             }
         } 
