@@ -15,7 +15,7 @@ parameters{
                 powershell '''
                   write-host $($env:Destination)
                   write-host $($env:Source)
-                    if ($($env:Destination) -eq $env:COMPUTERNAME ) -and ($($env:Source -neq $env:COMPUTERNAME ) ) {            
+                    if (($($env:Destination) -eq $env:COMPUTERNAME ) -and ($($env:Source -neq $env:COMPUTERNAME ) ) {            
                                write-host "hello"
 
                                gci -path c:\\node
