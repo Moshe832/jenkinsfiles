@@ -1,8 +1,12 @@
 
 pipeline {
+parameters{
+        choice(name: 'CHOICE', choices: ['One', 'node', 'Three'], description: 'Pick something')
+
+}
     options { timestamps() }
     
-    agent { label 'node' }
+    agent { label ${params.CHOICE} }
     stages {
         stage('hello') {
             steps {
