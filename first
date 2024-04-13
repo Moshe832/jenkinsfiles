@@ -1,7 +1,9 @@
 
 pipeline {
 parameters{
-        choice(name: 'CHOICE', choices: ['One', 'node', 'Three'], description: 'Pick something')
+        choice(name: 'Destination', choices: ['node', 'node1', 'node2'], description: 'Pick something')
+           choice(name: 'Source', choices: ['node', 'node1', 'node2'], description: 'Pick something')
+
 
 }
     options { timestamps() }
@@ -11,6 +13,8 @@ parameters{
         stage('hello') {
             steps {
                 powershell '''
+                  write-host $($env:Destination)
+                  write-host $($env:Source)
 
                                write-host "hello"
 
