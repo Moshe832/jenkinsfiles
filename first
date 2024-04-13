@@ -6,7 +6,7 @@ parameters{
 }
     options { timestamps() }
     
-    agent { label ${params.CHOICE} }
+    agent { label {params.CHOICE} }
     stages {
         stage('hello') {
             steps {
