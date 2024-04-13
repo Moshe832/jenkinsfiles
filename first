@@ -1,6 +1,7 @@
 
 pipeline {
     options { timestamps() }
+    
     agent { label 'node' }
     stages {
         stage('hello') {

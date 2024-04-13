@@ -1,0 +1,23 @@
+pipeline {
+    agent none
+       parameters { choice(name: 'DOCKER_REGISTRY', choices: ['PROD', 'QA', 'DEV', 'STAGE', ], description: 'SELECT THE DOCKER REGISTRY ') }
+
+    switch (node) {
+        case "prod"
+        result
+        agent { label 'node' }
+
+    }
+
+    stages {
+        stage("first") {
+            steps {
+                script {
+                    foo = "bar"
+                }
+                bat ' ecoh "foo"
+                '
+            }
+        }
+    }
+}
