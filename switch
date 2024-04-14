@@ -13,33 +13,31 @@ pipeline {
 switch (DOCKER_REGISTRY) {
     case "DEV":
         result = "DEV"
-  sh """
-   ./dev.sh
-   # running dev environment related shell script 
+ powershell
+ write-host "dev"
+  """
+
   """
   break
 
     case "PROD":
         result = "PROD"
-  sh """
-   ./prod.sh
-   # running prod environment related shell script
+ powershell """
+  write-host "PROD"
   """
   break
 
     case "STAGE":
         result = "STAGE"
-  sh """
-   ./stage.sh
-   # running stage environment related shell script 
-  """
+ powershell """
+  write-host "STAGE"
+"""
         break
 
     case "QA":
         result = "QA"
-  sh """
-  ./qa.sh
-   # running qa environment related shell script 
+ powershell """
+  write-host "QA"
   """
         break
 
