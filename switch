@@ -6,45 +6,45 @@ pipeline {
 
       stage('Select docker registry') {
 
-         steps {
-              script {
-                 def result = ""
+                                                    steps {
+                                                        script {
+                                                            def result = ""
 
-switch (DOCKER_REGISTRY) {
-    case "DEV":
-        result = "DEV"
- powershell
- write-host "dev"
-  """
+                                                        switch (DOCKER_REGISTRY) {
+                                                case "DEV":
+                                                    result = "DEV"
+                                            powershell """
+                                            write-host "dev"
+                                            """
 
-  """
-  break
+                                            
+                                            break
 
-    case "PROD":
-        result = "PROD"
- powershell """
-  write-host "PROD"
-  """
-  break
+                                                case "PROD":
+                                                    result = "PROD"
+                                            powershell """
+                                            write-host "PROD"
+                                            """
+                                            break
 
-    case "STAGE":
-        result = "STAGE"
- powershell """
-  write-host "STAGE"
-"""
-        break
+                                                case "STAGE":
+                                                    result = "STAGE"
+                                            powershell """
+                                            write-host "STAGE"
+                                            """
+                                                    break
 
-    case "QA":
-        result = "QA"
- powershell """
-  write-host "QA"
-  """
-        break
+                                                case "QA":
+                                                    result = "QA"
+                                            powershell """
+                                            write-host "QA"
+                                            """
+                                                    break
 
-    default:
-        result = "DEV"
-}
-        println result
+                                                default:
+                                                    result = "DEV"
+                                            }
+                                                    println result
 
 
               }
