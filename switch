@@ -1,55 +1,45 @@
 
 pipeline {
-   agent any  
-   parameters { choice(name: 'DOCKER_REGISTRY', choices: ['PROD', 'QA', 'DEV', 'STAGE', ], description: 'SELECT THE DOCKER REGISTRY ') }
-   stages {
+    agent any
+    parameters { choice(name: '', choices: ['PROD', 'QA', 'DEV', 'STAGE', ], description: 'SELECT THE DOCKER REGISTRY ') }
+    stages {
+        stage('Select docker registry') {
+            steps {
+                script {
+                    def result = ''
 
-      stage('Select docker registry') {
+                    switch (DOCKER_REGISTRY) {
+                        case 'DEV':
+                            result = 'DEV'
 
-                                                    steps {
-                                                        script {
-                                                            def result = ""
-
-                                                        switch (DOCKER_REGISTRY) {
-                                                case "DEV":
-                                                    result = "DEV"
-                                            powershell """
+                                 agent{ label node}
+                                    steps {
+                                     script {
+                                      powershell '''
                                             write-host "dev"
-                                            """
 
-                                            
-                                            break
+                                           '''
 
-                                                case "PROD":
-                                                    result = "PROD"
-                                            powershell """
-                                            write-host "PROD"
-                                            """
-                                            break
+                                         break
+                                     }
 
-                                                case "STAGE":
-                                                    result = "STAGE"
-                                            powershell """
-                                            write-host "STAGE"
-                                            """
-                                                    break
+                                    }
 
-                                                case "QA":
-                                                    result = "QA"
-                                            powershell """
-                                            write-host "QA"
-                                            """
-                                                    break
+                        case 'DEV':
+                            result = 'pord'
 
-                                                default:
-                                                    result = "DEV"
-                                            }
-                                                    println result
+                           agent{ label node}
 
+                                    steps {
+                                     script {
 
-              }
-         }
+                                      powershell '''
+                                            write-host "prod"
+
+                                           '''
+
+                       }   }                 break
+                 }
+            }
       }
-
-   }
-}
+ }|

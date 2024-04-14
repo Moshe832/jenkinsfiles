@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+    parameters {
+        choice(
+            choices: ['B6E' , 'B07'],
+            description: '',
+            name: 'REQUESTED_ACTION')
+    }
+
+    stages {
+        stage ('B6E') {
+            when {
+                // Only say hello if a "greeting" is requested
+                expression { params.REQUESTED_ACTION == 'B6E' }
+            }
+            steps {
+            agent{ label node}
+            powershell '''
+            write-host 'copy B07 > B6E '
+            '''
+
+            }
+
+        stage ('B07') {
+            when {
+                // Only say hello if a "greeting" is requested
+                expression { params.REQUESTED_ACTION == 'B07' }
+            }
+            steps {
+            agent{ label node}
+            powershell '''
+            write-host 'copy B6E > B07'
+            '''
+
+            }
+
+        }
+
+      }
+    }
+}
