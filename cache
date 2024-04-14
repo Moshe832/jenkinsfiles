@@ -8,11 +8,11 @@ pipeline {
     }
 
     stages {
-        stage ('B6E') {
             when {
                 // Only say hello if a "greeting" is requested
                 expression { params.REQUESTED_ACTION == 'B6E' }
             }
+            stage ('B6E') {
             steps {
                 step{
             agent{ label node}
@@ -23,11 +23,11 @@ pipeline {
             }
             }
         }
-        stage ('B07') {
             when {
                 // Only say hello if a "greeting" is requested
                 expression { params.REQUESTED_ACTION == 'B07' }
             }
+            stage ('B07') {
             step{
             agent{ label node}
             powershell '''
