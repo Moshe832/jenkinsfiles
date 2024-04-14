@@ -8,13 +8,12 @@ pipeline {
     }
 
     stages {
+        stage ('B6E') {
             when {
                 // Only say hello if a "greeting" is requested
                 expression { params.REQUESTED_ACTION == 'B6E' }
             }
-            stage ('B6E') {
             steps {
-                step{
             agent{ label node}
             powershell '''
             write-host 'copy B07 > B6E '
@@ -22,13 +21,13 @@ pipeline {
 
             }
             }
-        }
+        
+        stage ('B07') {
             when {
                 // Only say hello if a "greeting" is requested
                 expression { params.REQUESTED_ACTION == 'B07' }
             }
-            stage ('B07') {
-            step{
+            steps{
             agent{ label node}
             powershell '''
             write-host 'copy B6E > B07'
@@ -39,4 +38,4 @@ pipeline {
         }
 
       }
-    }
+}    
