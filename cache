@@ -34,33 +34,33 @@ pipeline {
             }
         }
 
-    stages {
-        stage('B7E') {
-            when {
-                // Only say hello if a "greeting" is requested
-                expression { params.REQUESTED_ACTION == 'B7E' }
-            }
-            steps {
-                agent { label node }
-                powershell '''
+        stages {
+            stage('B7E') {
+                when {
+                    // Only say hello if a "greeting" is requested
+                    expression { params.REQUESTED_ACTION == 'B7E' }
+                }
+                steps {
+                    agent { label node }
+                    powershell '''
             write-host 'copy B07 > B7E '
             '''
+                }
             }
-        }
 
-        stage('B06') {
-            when {
-                // Only say hello if a "greeting" is requested
-                expression { params.REQUESTED_ACTION == 'B06' }
-            }
-            steps {
-                agent { label node }
-                powershell '''
+            stage('B06') {
+                when {
+                    // Only say hello if a "greeting" is requested
+                    expression { params.REQUESTED_ACTION == 'B06' }
+                }
+                steps {
+                    agent { label node }
+                    powershell '''
             write-host 'copy B6E > B06'
             '''
+                }
             }
+
         }
-
-
     }
 }
