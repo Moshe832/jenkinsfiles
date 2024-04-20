@@ -1,6 +1,5 @@
 
-pipeline{
-
+pipeline {
     agent any
     parameters { choice(name: '', choices: ['PROD', 'QA', 'DEV', 'STAGE', ], description: 'SELECT THE DOCKER REGISTRY ') }
     stages {
@@ -13,37 +12,36 @@ pipeline{
                         case 'DEV':
                             result = 'DEV!'
 
-                                 agent{ label node}
+                            agent { label node }
                                     steps {
-                                     script {
-                                      powershell '''
+                                script {
+                                    powershell '''
                                             write-host "dev"
 
                                            '''
 
-                                         break
-                                     }
-s
+                                    break
+                                }
+                                
                                     }
 
                         case 'DEV':
                             result = 'pord!'
 
-                           agent{ label node}
+                            agent { label node }
 
                                     steps {
-                                     script {
-
-                                      powershell '''
+                                script {
+                                    powershell '''
                                             write-host "prod"
 
                                            '''
-
-                       }   }                 break
+                                    break
+                                }
                                     }
                     }
                 }
- }|
-
+            }
         }
     }
+}
