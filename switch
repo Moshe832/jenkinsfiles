@@ -22,7 +22,7 @@ pipeline {
 
                                           break
                                           }
-
+                                              }
                                           case 'DEV':
                                            result = 'pord!'
 
@@ -42,4 +42,4 @@ pipeline {
                 }
             }
         }
-    }
+    
