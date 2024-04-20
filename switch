@@ -1,6 +1,6 @@
 
 pipeline {
-    agent any
+    agent room
     parameters { choice(name: '', choices: ['PROD', 'QA', 'DEV', 'STAGE', ], description: 'SELECT THE DOCKER REGISTRY ') }
     stages {
         stage('Select docker registry') {
@@ -12,7 +12,7 @@ pipeline {
                         case 'DEV':
                             result = 'DEV!'
 
-                            agent { label node }
+                            agent { label room }
                                     steps {
                                 script {
                                     powershell '''
@@ -26,7 +26,7 @@ pipeline {
                                           case 'DEV':
                                            result = 'pord!'
 
-                                            agent { label node }
+                                            agent { label room }
 
                                                 steps {
                                             script {
