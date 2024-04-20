@@ -20,28 +20,26 @@ pipeline {
 
                                            '''
 
-                                    break
-                                }
-                                
-                                    }
+                                          break
+                                          }
 
-                        case 'DEV':
-                            result = 'pord!'
+                                          case 'DEV':
+                                           result = 'pord!'
 
-                            agent { label node }
+                                            agent { label node }
 
-                                    steps {
-                                script {
-                                    powershell '''
-                                            write-host "prod"
+                                                steps {
+                                            script {
+                                                powershell '''
+                                                        write-host "prod"
 
-                                           '''
-                                    break
-                                }
+                                                    '''
+                                                 break
+                                            }
+                                                                       }                       }
                                     }
                     }
                 }
             }
         }
     }
-}
