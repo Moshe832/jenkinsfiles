@@ -1,6 +1,6 @@
 
 pipeline {
-    agent room
+    agent any
     parameters { choice(name: '', choices: ['PROD', 'QA', 'DEV', 'STAGE', ], description: 'SELECT THE DOCKER REGISTRY ') }
     stages {
         stage('Select docker registry') {
