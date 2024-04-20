@@ -23,7 +23,7 @@ pipeline {
                                     break
                                 }
                                     }
-                                          case 'DEV':
+                                          case 'PROD':
                             result = 'pord!'
 
                             agent { label 'remote' }
