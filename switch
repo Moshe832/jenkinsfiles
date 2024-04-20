@@ -1,5 +1,6 @@
 
-pipeline {
+pipeline{
+
     agent any
     parameters { choice(name: '', choices: ['PROD', 'QA', 'DEV', 'STAGE', ], description: 'SELECT THE DOCKER REGISTRY ') }
     stages {
@@ -22,7 +23,7 @@ pipeline {
 
                                          break
                                      }
-
+s
                                     }
 
                         case 'DEV':
@@ -39,7 +40,10 @@ pipeline {
                                            '''
 
                        }   }                 break
-                 }
-            }
-      }
+                                    }
+                    }
+                }
  }|
+
+        }
+    }
