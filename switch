@@ -1,6 +1,6 @@
 
 pipeline {
-    agent {label'remote'}
+    agent { label'remote' }
     parameters { choice(name: '', choices: ['PROD', 'QA', 'DEV', 'STAGE', ], description: 'SELECT THE DOCKER REGISTRY ') }
     stages {
         stage('Select docker registry') {
@@ -8,7 +8,7 @@ pipeline {
                 script {
                     def result = ''
 
-                    switch ("DOCKER_REGISTRY") {
+                    switch ('DOCKER_REGISTRY'){
                         case 'DEV':
                             result = 'DEV!'
 
@@ -20,26 +20,27 @@ pipeline {
 
                                            '''
 
-                                          break
-                                          }
-                                              }
+                                    break
+                                }
+                                    }
                                           case 'DEV':
-                                           result = 'pord!'
+                            result = 'pord!'
 
-                                            agent { label 'remote' }
+                            agent { label 'remote' }
 
-                                                steps {
-                                            script {
-                                                powershell '''
+                            steps {
+                                script {
+                                    powershell '''
                                                         write-host "prod"
 
                                                     '''
-                                                 break
-                                            }
-                                                                       }                       }
-                                    }
+                                    break
+
+                                }
+                            }
                     }
                 }
             }
         }
-    
+    }
+}
