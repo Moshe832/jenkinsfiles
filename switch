@@ -1,6 +1,6 @@
 
 pipeline {
-    agent any
+    agent { label'remote' }
     parameters { choice(name: '', choices: ['PROD', 'QA', 'DEV', 'STAGE', ], description: 'SELECT THE DOCKER REGISTRY ') }
     stages {
         stage('Select docker registry') {
@@ -8,38 +8,39 @@ pipeline {
                 script {
                     def result = ''
 
-                    switch (DOCKER_REGISTRY) {
+                    switch ('DOCKER_REGISTRY'){
                         case 'DEV':
-                            result = 'DEV'
+                            result = 'DEV!'
 
-                                 agent{ label node}
+                            agent { label 'remote' }
                                     steps {
-                                     script {
-                                      powershell '''
+                                script {
+                                    powershell '''
                                             write-host "dev"
 
                                            '''
 
-                                         break
-                                     }
-
+                                    break
+                                }
                                     }
+                                          case 'PROD':
+                            result = 'pord!'
 
-                        case 'DEV':
-                            result = 'pord'
+                            agent { label 'remote' }
 
-                           agent{ label node}
+                            steps {
+                                script {
+                                    powershell '''
+                                                        write-host "prod"
 
-                                    steps {
-                                     script {
+                                                    '''
+                                    break
 
-                                      powershell '''
-                                            write-host "prod"
-
-                                           '''
-
-                       }   }                 break
-                 }
+                                }
+                            }
+                    }
+                }
             }
-      }
- }|
+        }
+    }
+}
