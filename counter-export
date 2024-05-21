@@ -1,0 +1,20 @@
+Get-Counter "\Processor(*)\% Processor Time" | Export-Counter -FileFormat csv -Path $HOME\Counters.csv -Force
+
+
+start $HOME
+Get-Counter "\Process(*)\Page File Bytes" -SampleInterval 10 | Export-Counter  -FileFormat csv -Path $HOME\Counters1.csv -Force
+
+\Storage Spaces Write Cache(*)\Read Cache %
+\Process V2(*)\% User Time
+-Circular -MaxSize 10
+
+$list = ("\Processor(*)\% Processor Time","\Process(*)\Page File Bytes")
+#$list = Get-Content -Path "$HOME\counters1.txt"
+#Get-Content $list
+
+foreach($counter in $list ){
+
+Get-Counter $counter  -MaxSamples 2 | Export-Counter  -FileFormat csv -Path $HOME\Counters5.csv -Force
+write-host $counter
+
+}
