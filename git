@@ -1,0 +1,10 @@
+
+pipeline {
+
+    options { timestamps() }
+    
+    agent any
+    stages {
+        stage('git') {
+            steps {
+                git -startTS()

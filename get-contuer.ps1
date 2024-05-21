@@ -15,3 +15,5 @@ Get-Counter -listset * | sort-object countersetname | Format-Table countersetnam
 Get-Counter -Counter "\Processor(_Total)\% Processor Time" -SampleInterval 2 -MaxSamples 10
 
 (Get-Counter -listset memory).paths
+
+

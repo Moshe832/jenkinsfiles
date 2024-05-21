@@ -5,7 +5,7 @@ pipeline {
             choices: ['B6E' , 'B07', 'B7E' , 'B06' ],
             description: '',
             name: 'REQUESTED_ACTION')
-    }
+    }`
 
     stages {
         stage('B6E') {
