@@ -12,7 +12,7 @@ $list = ("\Processor(*)\% Processor Time","\Process(*)\Page File Bytes")
 #$list = Get-Content -Path "$HOME\counters1.txt"
 #Get-Content $list
 
-foreach($counter in $list ){
+foreach($counter in $list ){ 
 
 Get-Counter $counter  -MaxSamples 2 | Export-Counter  -FileFormat csv -Path $HOME\Counters5.csv -Force
 write-host $counter
