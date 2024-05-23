@@ -8,7 +8,7 @@ parameters{
 }
     options { timestamps() }
     
-    agent { label params.Destination }
+    agent { label params.Destination 
     stages {
         stage('hello') {
             steps {
@@ -22,7 +22,7 @@ parameters{
 
                                gci -path c:\\node
                                }
-                               '''
+                               
             }
         } 
     }

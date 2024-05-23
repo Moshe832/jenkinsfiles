@@ -18,3 +18,28 @@ Get-Counter $counter  -MaxSamples 2 | Export-Counter  -FileFormat csv -Path $HOM
 write-host $counter
 
 }
+
+(Get-Counter -ListSet *).count
+
+Get-Counter -ListSet * | Where-Object {$_.counter -Like '\memory\Pa*'} |select  -ExpandProperty Counter
+
+$job = start-job{
+Get-Counter '\Memory\% Committed Bytes In Use' -Continuous -SampleInterval 3 |Export-Counter -FileFormat csv -Path $HOME\testc.csv
+
+}
+
+
+if(PSBeginTime 
+
+Start-Sleep -Seconds 30 
+
+Get-Job |Get-Member
+
+
+
+Stop-Job $job.Id 
+Get-Job $job.Id
+Write-Host *************************
+Write-Host *************************
+
+Get-Content C:\Users\moshe\testc.csv
