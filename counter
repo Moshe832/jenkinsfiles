@@ -36,8 +36,9 @@ while ($JobsTimeEND -gt $time) {
    
 }
 
-Get-Job -Name GetCounter 
+#Get-Job -Name GetCounter 
 Get-Job -Name GetCounter | Stop-Job 
+Get-Job -Name GetCounter 
 Get-Job -Name GetCounter | Remove-Job
 
 
