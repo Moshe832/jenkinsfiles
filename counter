@@ -1,0 +1,43 @@
+$timeOut = 2
+
+$job = start-job -Name GetCounter {
+
+    $list = Get-Content -Path C:\Users\moshe\listc.txt
+    Get-Counter $list -Continuous -SampleInterval 2 | Export-Counter -FileFormat csv -Path $HOME\Counter.csv -Force
+    write-host start $Jobstart
+
+}
+
+
+#Get-Job 
+$jobname = $job.name
+$JobsTimeEND = ($job.PSBeginTime).AddMinutes(($timeOut)).tostring()
+
+
+
+write-host Ended-''$jobname"-"$JobsTimeEND
+write-host ********************************
+write-host ********************************
+
+ 
+
+
+
+while ($JobsTimeEND -gt $time) {
+    
+    Start-Sleep 5 
+    $time = (Get-Date).ToString()
+
+    #write-host ********************************
+    #write-host ********************************
+    write-host EndTime - $time | Out-Null
+    #write-host ********************************
+    #write-host --------------------------------
+   
+}
+
+Get-Job -Name GetCounter 
+Get-Job -Name GetCounter | Stop-Job 
+Get-Job -Name GetCounter | Remove-Job
+
+
