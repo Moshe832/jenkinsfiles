@@ -40,7 +40,7 @@ write-host ********************************
 while (\$JobsTimeEND -gt $timeOut) {
     
     Start-Sleep 5 
-    $timeOut = (Get-Date).ToString()
+    #$timeOut = (Get-Date).ToString()
 
     #write-host ********************************
     #write-host ********************************
