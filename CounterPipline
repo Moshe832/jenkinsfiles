@@ -6,10 +6,7 @@ parameters{
         //string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
      string(name: 'Timeout', defaultValue: '120', description: 'Timeout' )
 }
-     options{
-    // Timeout counter starts AFTER agent is allocated
-    //timeout(time: 1, unit: 'SECONDS')
-}
+
 stages {
     stage('Example') {
         steps {
