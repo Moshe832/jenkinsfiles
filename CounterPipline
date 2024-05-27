@@ -25,7 +25,7 @@ stages {
 
 #Get-Job 
 \$jobname = \$job.name
-\$JobsTimeEND = (\$job.PSBeginTime).AddMinutes({$timeOut}).tostring()
+\$JobsTimeEND = (\$job.PSBeginTime).AddMinutes("{$timeOut}").tostring()
 
 
 
