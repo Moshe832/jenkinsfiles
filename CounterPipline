@@ -1,0 +1,69 @@
+pipeline{
+
+agent any
+
+parameters{
+        //string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+     string(name: 'Timeout', defaultValue: '120', description: 'Timeout' )
+}
+     options{
+    // Timeout counter starts AFTER agent is allocated
+    timeout(time: 1, unit: 'SECONDS')
+}
+stages {
+    stage('Example') {
+        steps {
+            powershell """
+            \$timeOut = 2
+
+\$job = start-job -Name GetCounter {
+
+    \$list = Get-Content -Path \$HOME\\listc.txt
+    Get-Counter \$list -Continuous -SampleInterval 2 | Export-Counter -FileFormat csv -Path {$workspace}\\Counter.csv -Force
+    write-host start \$Jobstart
+
+}
+
+
+#Get-Job 
+\$jobname = \$job.name
+\$JobsTimeEND = (\$job.PSBeginTime).AddMinutes((\$timeOut)).tostring()
+
+
+
+write-host Ended-''\$jobname"-"\$JobsTimeEND
+write-host ********************************
+write-host ********************************
+
+ 
+
+
+
+while (\$JobsTimeEND -gt \$time) {
+    
+    Start-Sleep 5 
+    \$time = (Get-Date).ToString()
+
+    #write-host ********************************
+    #write-host ********************************
+    write-host EndTime - \$time | Out-Null
+    #write-host ********************************
+    #write-host --------------------------------
+   
+}
+
+#Get-Job -Name GetCounter 
+Get-Job -Name GetCounter | Stop-Job 
+Get-Job -Name GetCounter 
+Get-Job -Name GetCounter | Remove-Job
+ """
+archiveArtifacts artifacts: '**/{$workspace}/Counter.csv',
+                   allowEmptyArchive: true,
+                   fingerprint: true,
+                   onlyIfSuccessful: true
+
+
+        }
+      }
+   } 
+}
