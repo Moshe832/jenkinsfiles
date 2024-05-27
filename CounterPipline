@@ -10,7 +10,7 @@ parameters{
 stages {
     stage('Example') {
         steps {
-            echo {$timeOut}
+            echo "{$timeOut}"
             powershell """
             #\$timeOut = 2
 
