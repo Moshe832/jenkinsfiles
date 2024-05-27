@@ -10,6 +10,7 @@ parameters{
 stages {
     stage('Example') {
         steps {
+            echo {$timeOut}
             powershell """
             #\$timeOut = 2
 
@@ -24,7 +25,7 @@ stages {
 
 #Get-Job 
 \$jobname = \$job.name
-\$JobsTimeEND = (\$job.PSBeginTime).AddMinutes(({$timeOut})).tostring()
+\$JobsTimeEND = (\$job.PSBeginTime).AddMinutes({$timeOut}).tostring()
 
 
 
@@ -36,14 +37,14 @@ write-host ********************************
 
 
 
-while (\$JobsTimeEND -gt \$time) {
+while (\$JobsTimeEND -gt {$timeOut}) {
     
     Start-Sleep 5 
-    \$time = (Get-Date).ToString()
+    {$timeOut} = (Get-Date).ToString()
 
     #write-host ********************************
     #write-host ********************************
-    write-host EndTime - \$time | Out-Null
+    write-host EndTime - {$timeOut} | Out-Null
     #write-host ********************************
     #write-host --------------------------------
    
