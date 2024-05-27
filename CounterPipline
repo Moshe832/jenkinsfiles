@@ -11,7 +11,7 @@ stages {
     stage('Example') {
         steps {
             powershell """
-            \$timeOut = 2
+            #\$timeOut = 2
 
 \$job = start-job -Name GetCounter {
 
@@ -24,7 +24,7 @@ stages {
 
 #Get-Job 
 \$jobname = \$job.name
-\$JobsTimeEND = (\$job.PSBeginTime).AddMinutes((\$timeOut)).tostring()
+\$JobsTimeEND = (\$job.PSBeginTime).AddMinutes(({$timeOut})).tostring()
 
 
 
