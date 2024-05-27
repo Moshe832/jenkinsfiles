@@ -9,8 +9,8 @@ parameters{
 
 stages {
     stage('Example') {
-        steps {
-            echo {$timeOut}
+        steps {"
+            echo  '{$timeOut}'
             powershell """
             #\$timeOut = 2
 
