@@ -8,6 +8,7 @@ pipeline {
 
                     stage('Clean WorkSpace') {
                         steps {
+                            script {
                             cleanWs()
                         }
                     }
