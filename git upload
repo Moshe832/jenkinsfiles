@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('upload') {
             steps {
-                script {  """  bat: echo 'Hello World' """
+                script {    bat  """ echo 'Hello World' """
 
                 }
             }
