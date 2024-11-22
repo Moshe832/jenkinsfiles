@@ -5,14 +5,15 @@ pipeline {
         stage('upload') {
             steps {
                 script {    bat  """ echo 'Hello World' """
-
-                    post {
-                        always {
-                            cleanWs()
-                        }
-                    }
                 }
+            }
+        }
+
+        post {
+            always {
+                cleanWs()
             }
         }
     }
 }
+
