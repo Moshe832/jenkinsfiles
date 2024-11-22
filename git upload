@@ -6,14 +6,11 @@ pipeline {
             steps {
                 script {    bat  """ echo 'Hello World' """
 
-                stage('Clean WorkSpace'){
-                    steps {
-
-                cleanWs()
-
-                }
-                }
-
+                    stage('Clean WorkSpace') {
+                        steps {
+                            cleanWs()
+                        }
+                    }
                 }
             }
         }
