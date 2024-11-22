@@ -6,6 +6,8 @@ pipeline {
             steps {
                 script {    bat  """ echo 'Hello World' """
 
+                cleanWs()
+
                 }
             }
         }
