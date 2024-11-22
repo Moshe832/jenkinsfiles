@@ -8,12 +8,12 @@ pipeline {
                 }
             }
         }
-
+    }
         post {
             always {
                 cleanWs()
             }
         }
     }
-}
 
+a
