@@ -1,12 +1,12 @@
 
 pipeline {
- 
     agent { label'Remote Machine' }
-options { timestamps () }
+    options { timestamps() }
     stages {
         stage('upload') {
             steps {
-                script {    bat  """ echo "%computername%" """
+                script {    bat  """echo "%computername%" """
+                    powershell """ cgi c: """
                 }
             }
         }
@@ -16,5 +16,5 @@ options { timestamps () }
                 cleanWs()
             }
         }
-    }
+}
 
