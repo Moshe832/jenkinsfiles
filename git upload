@@ -1,10 +1,10 @@
 
 pipeline {
-          options  timestamps {
+ 
+    agent { label'Remote Machine' }
+         options  timestamps {
      some block
 }
-    agent { label'Remote Machine' }
-
     stages {
         stage('upload') {
             steps {
