@@ -6,7 +6,7 @@ pipeline {
         stage('upload') {
             steps {
                 script {    bat  """echo "%computername%" """
-                    powershell """ cgi c: """
+                    powershell """  gci -Path C:\ """
                 }
             }
         }
