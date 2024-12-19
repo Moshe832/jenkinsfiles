@@ -1,6 +1,6 @@
 
 pipeline {
-            timestamps {
+          options  timestamps {
      some block
 }
     agent { label'Remote Machine' }
