@@ -1,9 +1,9 @@
 
 pipeline {
-    timestamps {
+    agent { label'Remote Machine' }
+        timestamps {
     // some block
 }
-    agent { label'Remote Machine' }
     stages {
         stage('upload') {
             steps {
