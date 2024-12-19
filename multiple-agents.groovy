@@ -9,6 +9,7 @@ def generateStage(nodeLabel) {
                     echo '************************'
                     echo '*****BUILDING JOBS******'
                     echo '************************'
+                    echo 'Very Good'
                 //sh 'python build.py'
                 //sh 'cd ion-js && npm run prepublishOnly'
                 }
