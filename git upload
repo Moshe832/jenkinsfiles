@@ -1,7 +1,8 @@
-        timestamps {
+
+pipeline {
+            timestamps {
      some block
 }
-pipeline {
     agent { label'Remote Machine' }
 
     stages {
