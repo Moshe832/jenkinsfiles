@@ -1,5 +1,5 @@
 def agents  = ['linux', 'Remote Machine']
-options { timestamps() }
+
 def generateStage(nodeLabel) {
     return {
         stage("Runs on ${nodeLabel}") {
@@ -23,6 +23,12 @@ def parallelStagesMap = agents.collectEntries {
 }
 pipeline {
     agent none
+    options { 
+    timestamps() 
+    timeout(time: 20, unit: 'SECONDS') 
+    }
+   
+
     stages {
         stage('non-parallel stage') {
             steps {
