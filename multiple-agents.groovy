@@ -46,5 +46,9 @@ pipeline {
         always {
             echo 'I will always say Hello again!'
         }
+        failure {
+            echo "Failed stage name"
+        }
+
     }
 }
