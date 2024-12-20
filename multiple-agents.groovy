@@ -21,7 +21,7 @@ def parallelStagesMap = agents.collectEntries {
     ["${it}" : generateStage(it)]
 }
 pipeline {
-    agent any
+    agent non
     options {
         timestamps()
         timeout(time: 20, unit: 'SECONDS')
