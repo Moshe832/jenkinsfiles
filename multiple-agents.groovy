@@ -1,5 +1,5 @@
 def agents  = ['linux', 'Remote Machine']
-
+options { timestamps() }
 def generateStage(nodeLabel) {
     return {
         stage("Runs on ${nodeLabel}") {
