@@ -26,7 +26,7 @@ pipeline {
         timestamps()
         timeout(time: 20, unit: 'SECONDS')
     }
-a
+
     stages {
         stage('non-parallel stage') {
             steps {
