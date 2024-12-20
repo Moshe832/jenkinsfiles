@@ -42,7 +42,7 @@ pipeline {
             }
         }
     }
-
+}
     post {
         always {
             sh 'echo "This will always run"'
@@ -62,4 +62,4 @@ pipeline {
             sh 'echo "... or the other way around :)"'
         }
     }
-}
+
