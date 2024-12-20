@@ -21,12 +21,12 @@ def parallelStagesMap = agents.collectEntries {
     ["${it}" : generateStage(it)]
 }
 pipeline {
-    agent non
+    agent none
     options {
         timestamps()
         timeout(time: 20, unit: 'SECONDS')
     }
-
+a
     stages {
         stage('non-parallel stage') {
             steps {
