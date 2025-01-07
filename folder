@@ -25,7 +25,7 @@ pipeline {
                 echo "DISABLE_AUTH is ${DISABLE_AUTH}"
                 echo "DISABLE_AUTH is ${packageType}"
 
-                packageType
+                //packageType
                 //sh 'printenv'
             }
         }
