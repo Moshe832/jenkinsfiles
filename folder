@@ -2,6 +2,10 @@ pipeline {
     agent {
         label 'win11'
     }
+    options {
+        // Timeout counter starts AFTER agent is allocated
+        timeout(time: 300, unit: 'SECONDS')
+    }
 
     environment {
         DISABLE_AUTH = 'true'
