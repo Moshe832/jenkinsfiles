@@ -6,7 +6,7 @@ pipeline {
     string(name: 'packageType', defaultValue: 'default', description: 'Type of package to build')  
 }  
 
-    }
+    
     options {
         // Timeout counter starts AFTER agent is allocated
         timeout(time: 300, unit: 'SECONDS')
@@ -30,3 +30,5 @@ pipeline {
             }
         }
     }
+}
+
