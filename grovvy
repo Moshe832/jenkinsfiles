@@ -1,2 +1,0 @@
-def arg = ["Groovy","Java","Python",”nodeJS”]
-println arg.class
