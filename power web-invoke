@@ -6,7 +6,7 @@ $username = "eve.holt@reqres.in"
 $password = "pistol"
 
 # Encode the username and password in Base64 for Basic Authentication
-$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("$username:$password")))
+$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("${username}:${password}"))
 
 # Create the headers for the request
 $headers = @{
