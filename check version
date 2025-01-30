@@ -31,15 +31,14 @@ pipeline {
                 }
             }
         }
-    }
         stage('Deploy') {
-        steps {
-            script {
+            steps {
+                script {
                     powershell """
                     Write-Host "Deploying version ${env.delta}..."
-
-               """
+                    """
+                }
             }
         }
-        }
+    }
 }
