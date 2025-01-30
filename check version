@@ -3,24 +3,28 @@ pipeline {
     agent any
     parameters {
         string(
-            name: 'VERSION', 
-            defaultValue: '200.0.00', 
+            name: 'VERSION',
+            defaultValue: '200.0.00',
             description: 'Enter a version number (e.g., 200.0.00 for Full, others for Delta)'
         )
+    }
+    environment {
+        delta = 'false'
     }
     stages {
         stage('Check Version Type') {
             steps {
-                script {
+                    delta = 'false'
                     def fullPattern = /^\d{3}\.0\.\d{2}$/  // Matches nnn.0.nn (Full Release)
                     def deltaPattern = /^\d{3}\.\d\.\d{2}$/ // Matches any other nnn.x.nn (Delta Update)
+                        delta = 'false'
                     // Check for Full Release
                     if (VERSION ==~ fullPattern) {
-                        echo "✅ ${VERSION} is a Full Release"
-                    }
+                        delta = false
+                        delta = 'true'
                     // Check for Delta Update
                     else if (VERSION ==~ deltaPattern) {
-                        echo "🔄 ${VERSION} is a Delta Update"
+                        delta = true
                     }
                     // If the version does not match either, it's invalid
                     else {
@@ -30,26 +34,19 @@ pipeline {
             }
         }
         stage('Deploy') {
-            steps {
+                if (${delta} == 'false') {
                 script {
-                powershell """
-                if ${VERSION} -eq '200.0.00' {
+                    powershell """
+                if ${delta} -eq \$false {
                     echo "Deploying Full Release..."
                 } else {
                     echo "Deploying Delta Update..."
                 }
                 """
-           
-                    
-                }
-                    
 
-                }
             }
+
         }
     }
-
-
-
-
-
+}
+    }
