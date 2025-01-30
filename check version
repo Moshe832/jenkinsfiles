@@ -1,9 +1,4 @@
 
-
-    environment {
-        echo $LANG
-        echo $LC_ALL
-    }
 pipeline {
     agent any
     parameters {
@@ -34,5 +29,17 @@ pipeline {
                 }
             }
         }
+        stage('Print Env Variables') {
+            steps {
+                script {echo "LANG: ${env.LANG}"; echo "LC_ALL: ${env.LC_ALL}"}
+                    
+
+                }
+            }
+        }
     }
 }
+
+
+
+
