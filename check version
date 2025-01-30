@@ -1,7 +1,8 @@
 
 /* groovylint-disable-next-line NglParseError */
 pipeline {
-    agent any
+    //agent any
+    agent { label'win11' }
     parameters {
         string(
             name: 'VERSION',
@@ -42,6 +43,8 @@ pipeline {
                     } else {
                         Write-Host "Deploying Delta Update $params.VERSION..."
                     }
+
+                    new-item -path C:\\ -name "version.txt" -value "$params.VERSION" -type file
 
 
 
