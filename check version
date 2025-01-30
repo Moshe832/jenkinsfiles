@@ -1,9 +1,10 @@
-@CompileStatic
-pipeline {
+
+
     environment {
         echo $LANG
         echo $LC_ALL
     }
+pipeline {
     agent any
     parameters {
         string(
