@@ -20,10 +20,10 @@ pipeline {
                     def deltaPattern = /^\d{3}\.\d\.\d{2}$/ // Matches any other nnn.x.nn (Delta Update)
                     // Check for Full Release
                     if (params.VERSION ==~ fullPattern) {
-                        env.delta = 'full'
+                        delta = 'full'
                             // Check for Delta Update
                             } else if (params.VERSION ==~ deltaPattern) {
-                                env.delta = 'delta'
+                                delta = 'delta'
                             // If the version does not match either, it's invalid
                             } else {
                                 error('Invalid version format! Only nnn.0.nn for Full Release or nnn.x.nn for Delta Update.')
@@ -35,7 +35,7 @@ pipeline {
             steps {
                 script {
                     powershell """
-                    Write-Host "Deploying version ${env.delta}..."
+                    Write-Host "Deploying version ${delta}..."
                     """
                 }
             }
