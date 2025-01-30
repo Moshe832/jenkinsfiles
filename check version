@@ -1,4 +1,9 @@
+@CompileStatic
 pipeline {
+    environmet {
+        echo $LANG
+        echo $LC_ALL
+    }
     agent any
     parameters {
         string(name: 'VERSION', defaultValue: '200.0.00', description: 'Enter a version number (e.g., 200.0.00 for Full, others for Delta)')
@@ -13,7 +18,6 @@ pipeline {
                     echo $LANG
                     echo $LC_ALL
 
-
                     // Check for Full Release
                     if (VERSION ==~ fullPattern) {
                         echo "✅ ${VERSION} is a Full Release"
@@ -24,7 +28,7 @@ pipeline {
                     }
                     // If the version does not match either, it's invalid
                     else {
-                        error("❌ Invalid version format! Only nnn.0.nn for Full Release or nnn.x.nn for Delta Update.")
+                        error('❌ Invalid version format! Only nnn.0.nn for Full Release or nnn.x.nn for Delta Update.')
                     }
                 }
             }
