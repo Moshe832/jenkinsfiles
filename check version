@@ -5,8 +5,8 @@ pipeline {
     parameters {
         string(
             name: 'VERSION',
-            defaultValue: '200.0.00',
-            description: 'Enter a version number (e.g., 200.0.00 for Full, others for Delta)'
+            defaultValue: '200.0.000',
+            description: 'Enter a version number (e.g., 200.0.000 for Full, others for Delta)'
         )
     }
     environment {
@@ -16,8 +16,8 @@ pipeline {
         stage('Check Version Type') {
             steps {
                 script {
-                    def fullPattern = /^\d{3}\.0\.\d{2}$/  // Matches nnn.0.nn (Full Release)
-                    def deltaPattern = /^\d{3}\.\d\.\d{2}$/ // Matches any other nnn.x.nn (Delta Update)
+                    def fullPattern = /^\d{3}\.0\.\d{3}$/  // Matches nnn.0.nnn (Full Release)
+                    def deltaPattern = /^\d{3}\.\d\.\d{3}$/ // Matches any other nnn.x.nnn (Delta Update)
                     // Check for Full Release
                     if (params.VERSION ==~ fullPattern) {
                         delta = 'true'
@@ -26,7 +26,7 @@ pipeline {
                                 delta = 'false'
                             // If the version does not match either, it's invalid
                             } else {
-                                error('Invalid version format! Only nnn.0.nn for Full Release or nnn.x.nn for Delta Update.')
+                                error('Invalid version format! Only nnn.0.nnn for Full Release or nnn.x.nn for Delta Update.')
                     }
                 }
             }
