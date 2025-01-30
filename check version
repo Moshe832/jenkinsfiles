@@ -38,9 +38,9 @@ pipeline {
                     Write-Host "Deploying version ${delta}..."
                    
                    if(\$$delta -eq '\$true') {
-                        Write-Host "Deploying Full Release \${params.VERSION} ..."
+                        Write-Host "Deploying Full Release $params.VERSION ..."
                     } else {
-                        Write-Host "Deploying Delta Update \${params.VERSION}..."
+                        Write-Host "Deploying Delta Update $params.VERSION..."
                     }
 
 
