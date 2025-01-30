@@ -22,34 +22,29 @@ pipeline {
                     // Check for Delta Update
                     } else if (params.VERSION ==~ deltaPattern) {
                         env.delta = 'true'
-                    
+
                     // If the version does not match either, it's invalid
                     else {
                         error('❌ Invalid version format! Only nnn.0.nn for Full Release or nnn.x.nn for Delta Update.')
                     }
-                }
+                    }
             }
         }
         stage('Deploy') {
-
 
 steps {
 
     script {
 
-                    powershell """ 
+                    powershell """
                     Write-Host "Deploying version ${env.delta}..."
-
 
                """
     }
 
 }
 
-
-            }
-
         }
-    }
 
-    
+    }
+}
