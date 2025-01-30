@@ -10,7 +10,7 @@ pipeline {
         )
     }
     environment {
-        delta = 'false'
+       // delta = 'false'
     }
     stages {
         stage('Check Version Type') {
