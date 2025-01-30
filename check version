@@ -15,6 +15,7 @@ pipeline {
     stages {
         stage('Check Version Type') {
             steps {
+                script {
                     def fullPattern = /^\d{3}\.0\.\d{2}$/  // Matches nnn.0.nn (Full Release)
                     def deltaPattern = /^\d{3}\.\d\.\d{2}$/ // Matches any other nnn.x.nn (Delta Update)
                     // Check for Full Release
