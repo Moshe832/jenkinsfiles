@@ -19,10 +19,10 @@ pipeline {
                     def fullPattern = /^\d{3}\.0\.\d{2}$/  // Matches nnn.0.nn (Full Release)
                     def deltaPattern = /^\d{3}\.\d\.\d{2}$/ // Matches any other nnn.x.nn (Delta Update)
                     // Check for Full Release
-                    if (params.VERSION ==~ fullPattern) {
+                    if (params.VERSION == fullPattern) {
                         env.delta = 'full'
                             // Check for Delta Update
-                            } else if (params.VERSION ==~ deltaPattern) {
+                            } else if (params.VERSION == deltaPattern) {
                                 env.delta = 'delta'
                             // If the version does not match either, it's invalid
                             } else {
