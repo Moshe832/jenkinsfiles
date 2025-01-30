@@ -10,6 +10,10 @@ pipeline {
                     def fullPattern = /^\d{3}\.0\.\d{2}$/  // Matches nnn.0.nn (Full Release)
                     def deltaPattern = /^\d{3}\.\d\.\d{2}$/ // Matches any other nnn.x.nn (Delta Update)
 
+                    echo $LANG
+                    echo $LC_ALL
+
+
                     // Check for Full Release
                     if (VERSION ==~ fullPattern) {
                         echo "✅ ${VERSION} is a Full Release"
