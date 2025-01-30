@@ -44,7 +44,8 @@ pipeline {
                         Write-Host "Deploying Delta Update $params.VERSION..."
                     }
 
-                    new-item -path C:\\ -name "version.txt" -value "$params.VERSION" -type file -force -verbose
+                   # new-item -path C:\\ -name "version.txt" -value "$params.VERSION" -type file -force -verbose
+                 new-item -path C:\\ -name "version.txt"  -type file -force -verbose
 
 
 
