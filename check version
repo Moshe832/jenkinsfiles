@@ -1,4 +1,5 @@
 
+/* groovylint-disable-next-line NglParseError */
 pipeline {
     agent any
     parameters {
