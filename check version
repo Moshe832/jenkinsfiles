@@ -37,7 +37,7 @@ pipeline {
                     powershell """
                     Write-Host "Deploying version ${delta}..."
                    
-                   if($delta -eq 'true') {
+                   if(\$$delta -eq '\$true') {
                         Write-Host "Deploying Full Release..."
                     } else {
                         Write-Host "Deploying Delta Update..."
