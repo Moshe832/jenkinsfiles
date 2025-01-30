@@ -29,9 +29,19 @@ pipeline {
                 }
             }
         }
-        stage('Print Env Variables') {
+        stage('Deploy') {
             steps {
-                script {echo "LANG: ${env.LANG}"; echo "LC_ALL: ${env.LC_ALL}"}
+                script {
+                powershell """
+                if ${VERSION} -eq '200.0.00' {
+                    echo "Deploying Full Release..."
+                } else {
+                    echo "Deploying Delta Update..."
+                }
+                """
+           
+                    
+                }
                     
 
                 }
