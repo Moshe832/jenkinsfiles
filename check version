@@ -1,12 +1,16 @@
 @CompileStatic
 pipeline {
-    environmet {
+    environment {
         echo $LANG
         echo $LC_ALL
     }
     agent any
     parameters {
-        string(name: 'VERSION', defaultValue: '200.0.00', description: 'Enter a version number (e.g., 200.0.00 for Full, others for Delta)')
+        string(
+            name: 'VERSION', 
+            defaultValue: '200.0.00', 
+            description: 'Enter a version number (e.g., 200.0.00 for Full, others for Delta)'
+        )
     }
     stages {
         stage('Check Version Type') {
@@ -14,10 +18,6 @@ pipeline {
                 script {
                     def fullPattern = /^\d{3}\.0\.\d{2}$/  // Matches nnn.0.nn (Full Release)
                     def deltaPattern = /^\d{3}\.\d\.\d{2}$/ // Matches any other nnn.x.nn (Delta Update)
-
-                    echo $LANG
-                    echo $LC_ALL
-
                     // Check for Full Release
                     if (VERSION ==~ fullPattern) {
                         echo "✅ ${VERSION} is a Full Release"
