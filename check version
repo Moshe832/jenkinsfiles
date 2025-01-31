@@ -40,13 +40,18 @@ pipeline {
                    
                    if(\$$delta -eq '\$true') {
                         Write-Host "Deploying Full Release $params.VERSION ..."
+                        remove-item -path C:\\ -name "version.txt" -force -verbose
                     } else {
                         Write-Host "Deploying Delta Update $params.VERSION..."
                     }
 
+
+
+
                     new-item -path C:\\ -name "version.txt" -value "$params.VERSION" -type file -force -verbose
                     #new-item -path C:\\ -name "version.txt"  -type file -force -verbose
-
+                    
+                    remove-item -path C:\\ -name "version.txt" -force -verbose
 
 
 
