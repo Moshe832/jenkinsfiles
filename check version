@@ -1,8 +1,8 @@
 
 /* groovylint-disable-next-line NglParseError */
 pipeline {
-    agent any
-    //agent { label'win11' }
+   // agent any
+    agent { label 'Remote Machine' }
     parameters {
         string(
             name: 'VERSION',
