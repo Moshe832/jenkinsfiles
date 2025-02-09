@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+    environment {
+        MY_VAR = ''  // Default value
+    }
+    stages {
+        stage('Check Condition') {
+            steps {
+                script {
+                    def value1 = "Hello"
+                    def value2 = "Hello"
+
+                    if (value1 == value2) {
+                        env.MY_VAR = "Values are equal"
+                    } else {
+                        env.MY_VAR = "Values are different"
+                    }
+                    echo "MY_VAR: ${env.MY_VAR}"
+                }
+            }
+        }
+    }
+}

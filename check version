@@ -1,32 +1,37 @@
 
 /* groovylint-disable-next-line NglParseError */
 pipeline {
-    agent any
+   // agent any
+    agent { label 'Remote Machine' }
     parameters {
         string(
             name: 'VERSION',
-            defaultValue: '200.0.00',
-            description: 'Enter a version number (e.g., 200.0.00 for Full, others for Delta)'
+            defaultValue: '200.0.000',
+            description: 'Enter a version number (e.g., 200.0.000 for Full, others for Delta)'
         )
     }
     environment {
-        delta = 'false'
+        deltaa = 'false'
     }
     stages {
         stage('Check Version Type') {
             steps {
                 script {
-                    def fullPattern = /^\d{3}\.0\.\d{2}$/  // Matches nnn.0.nn (Full Release)
-                    def deltaPattern = /^\d{3}\.\d\.\d{2}$/ // Matches any other nnn.x.nn (Delta Update)
+                    def fullPattern = /^\d{3}\.0\.\d{3}$/  // Matches nnn.0.nnn (Full Release)
+                    def deltaPattern = /^\d{3}\.\d\.\d{3}$/ // Matches any other nnn.x.nnn (Delta Update)
                     // Check for Full Release
                     if (params.VERSION ==~ fullPattern) {
+<<<<<<< HEAD
                         env.delta = '\$false'  
+=======
+                        delta = 'true'
+>>>>>>> bf7b11753fb410dcd2c548eef71491dff19fc7d2
                             // Check for Delta Update
                             } else if (params.VERSION ==~ deltaPattern) {
-                                env.delta = '\$true'
+                                delta = 'false'
                             // If the version does not match either, it's invalid
                             } else {
-                                error('Invalid version format! Only nnn.0.nn for Full Release or nnn.x.nn for Delta Update.')
+                                error('Invalid version format! Only nnn.0.nnn for Full Release or nnn.x.nn for Delta Update.')
                     }
                 }
             }
@@ -35,7 +40,25 @@ pipeline {
             steps {
                 script {
                     powershell """
-                    Write-Host "Deploying version ${env.delta}..."
+                    Write-Host "Deploying version ${delta}..."
+                   
+                   if(\$$delta -eq '\$true') {
+                        Write-Host "Deploying Full Release $params.VERSION ..."
+                        remove-item -path C:\\ -name "version.txt" -force -verbose
+                    } else {
+                        Write-Host "Deploying Delta Update $params.VERSION..."
+                    }
+
+
+
+
+                    new-item -path C:\\ -name "version.txt" -value "$params.VERSION" -type file -force -verbose
+                    #new-item -path C:\\ -name "version.txt"  -type file -force -verbose
+                    
+                    remove-item -path C:\\ -name "version.txt" -force -verbose
+
+
+
                     """
                 }
             }
