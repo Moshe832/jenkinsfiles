@@ -1,12 +1,29 @@
 
 pipeline {
-    agent { label'Remote Machine' }
-    options { timestamps() }
+    agent { label'room' }
     stages {
         stage('upload') {
             steps {
-                script {    bat  """echo "%computername%" """
-                    powershell """  gci -Path C:\\ """
+                script {    bat  """ echo 'Hello World' """
+
+                        git init
+
+                        git add .
+
+                        git commit -m "Add all my files"
+
+                        git remote add origin https://github.com/Moshe832/jenkinsfiles.git
+
+                        
+                       // Upload of the project from scratch requires git pull origin master.
+
+                        //git pull origin master
+
+                        git push origin master
+
+                       // If any problem occurs in push
+
+
                 }
             }
         }
@@ -16,5 +33,5 @@ pipeline {
                 cleanWs()
             }
         }
-}
+    }
 
