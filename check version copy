@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    parameters {
+        string(name: 'VERSION', defaultValue: '200.0.00', description: 'Enter a version number (e.g., 200.0.00 for Full, others for Delta)')
+    }
+    stages {
+        stage('Check Version Type') {
+            steps {
+                script {
+                    def fullPattern = /^\d{3}\.0\.\d{2}$/  // Matches nnn.0.nn (Full Release)
+                    def deltaPattern = /^\d{3}\.\d\.\d{2}$/ // Matches any other nnn.x.nn (Delta Update)
+
+                    // Check for Full Release
+                    if (VERSION ==~ fullPattern) {
+                        echo "✅ ${VERSION} is a Full Release"
+                    }
+                    // Check for Delta Update
+                    else if (VERSION ==~ deltaPattern) {
+                        echo "🔄 ${VERSION} is a Delta Update"
+                    }
+                    // If the version does not match either, it's invalid
+                    else {
+                        error("❌ Invalid version format! Only nnn.0.nn for Full Release or nnn.x.nn for Delta Update.")
+                    }
+                }
+            }
+        }
+    }
+}
