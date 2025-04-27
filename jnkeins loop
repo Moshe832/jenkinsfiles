@@ -1,0 +1,32 @@
+pipeline {
+    agent none // No global agent
+    stages {
+        stage('Run PowerShell Command on Multiple Agents') {
+            steps {
+                script {
+                    // List of agents to run on
+                    def agents = ['windows-agent-1', 'windows-agent-2', 'windows-agent-3']
+                    
+                    // Create a map for parallel execution
+                    def parallelStages = [:]
+
+                    // Loop through agents and create parallel stages
+                    agents.each { agentLabel ->
+                        parallelStages[agentLabel] = {
+                            node(agentLabel) {
+                                powershell '''
+                                    Write-Host "Running PowerShell on ${env.NODE_NAME}"
+                                    # Your PowerShell command here
+                                    Get-Process
+                                '''
+                            }
+                        }
+                    }
+
+                    // Execute all stages in parallel
+                    parallel parallelStages
+                }
+            }
+        }
+    }
+}
