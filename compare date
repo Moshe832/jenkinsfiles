@@ -1,0 +1,20 @@
+# Load JSON
+$servers = Get-Content "C:\path\to\params.json" | ConvertFrom-Json
+
+# Get today's date
+$today = Get-Date
+
+foreach ($server in $servers) {
+    # Parse the date from JSON
+    $lastUpdate = [datetime]$server.LastUpdate
+
+    # Calculate the difference
+    $daysDifference = ($today - $lastUpdate).Days
+
+    # Check if within 30 days
+    if ($daysDifference -le 30) {
+        Write-Host "$($server.Name) was updated within 30 days. ($daysDifference days ago)"
+    } else {
+        Write-Host "$($server.Name) is older than 30 days. ($daysDifference days ago)"
+    }
+}
