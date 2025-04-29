@@ -1,0 +1,30 @@
+# Load JSON
+$jsonPath = "C:\Scripts\userAccessList.json"
+$userList = Get-Content $jsonPath | ConvertFrom-Json
+
+$today = Get-Date
+
+foreach ($entry in $userList) {
+    $user = $entry.UserName
+    $group = $entry.GroupName
+    $startDate = [datetime]$entry.StartDate
+    $endDate = $startDate.AddDays(30)
+
+    $isMember = (Get-ADGroupMember -Identity $group -Recursive | Where-Object { $_.SamAccountName -eq $user }) -ne $null
+
+    if ($today -ge $startDate -and $today -lt $endDate) {
+        if (-not $isMember) {
+            Write-Host "מוסיף את $user לקבוצה $group"
+            Add-ADGroupMember -Identity $group -Members $user
+        } else {
+            Write-Host "$user כבר חבר ב-$group – אין צורך להוסיף"
+        }
+    } else {
+        if ($isMember) {
+            Write-Host "מסיר את $user מקבוצת $group – הטווח נגמר"
+            Remove-ADGroupMember -Identity $group -Members $user -Confirm:$false
+        } else {
+            Write-Host "$user לא בטווח, ולא חבר – אין מה לעשות"
+        }
+    }
+}
