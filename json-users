@@ -1,0 +1,22 @@
+[
+  {
+    "UserName": "yosi.cohen",
+    "GroupName": "ADMIN-123456B",
+    "StartDate": "2025-04-15"
+  },
+  {
+    "UserName": "tamar.levi",
+    "GroupName": "ADMIN-123457B",
+    "StartDate": "2025-05-01"
+  },
+  {
+    "UserName": "Moshe.Cohen",
+    "GroupName": "ADMIN-123457B",
+    "StartDate": "2025-05-01"
+  },
+  {
+    "UserName": "limor.Cohen",
+    "GroupName": "ADMIN-1234k78",
+    "StartDate": "2025-05-01"
+  }
+]
