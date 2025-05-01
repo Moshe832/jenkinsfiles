@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout Repository') {
+            steps {
+                // Clone the Bitbucket repository using SCM
+                checkout scm
+            }
+        }
+
+        stage('Run PowerShell Script') {
+            steps {
+                // Run the PowerShell script that is inside the "Scripts" folder
+                powershell '''
+                # PowerShell script path in the workspace
+                $jsonPath = ".\\access-control\\userAccessList.json"
+
+                # Ensure the JSON file exists in the workspace
+                if (-Not (Test-Path $jsonPath)) {
+                    Write-Host "שגיאה: קובץ JSON לא נמצא ב-$jsonPath"
+                    exit 1
+                }
+
+                # Load user data from JSON file
+                $userList = Get-Content $jsonPath | ConvertFrom-Json
+                $today = Get-Date
+
+                # Loop through each user and process their group membership
+                foreach ($entry in $userList) {
+                    $user = $entry.UserName
+                    $group = $entry.GroupName
+                    $startDate = [datetime]$entry.StartDate
+                    $endDate = $startDate.AddDays(30)
+
+                    $isMember = (Get-ADGroupMember -Identity $group -Recursive | Where-Object { $_.SamAccountName -eq $user }) -ne $null
+
+                    if ($today -ge $startDate -and $today -lt $endDate) {
+                        if (-not $isMember) {
+                            Write-Host "מוסיף את $user לקבוצה $group"
+                            Add-ADGroupMember -Identity $group -Members $user
+                        } else {
+                            Write-Host "$user כבר חבר ב-$group – אין צורך להוסיף"
+                        }
+                    } else {
+                        if ($isMember) {
+                            Write-Host "מסיר את $user מקבוצת $group – הטווח נגמר"
+                            Remove-ADGroupMember -Identity $group -Members $user -Confirm:$false
+                        } else {
+                            Write-Host "$user לא בטווח, ולא חבר – אין מה לעשות"
+                        }
+                    }
+                }
+                '''
+            }
+        }
+    }
+}

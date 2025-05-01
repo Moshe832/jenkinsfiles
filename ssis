@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+
+    environment {
+        SSIS_PACKAGE_PATH = "C:\\SSIS\\MyPackage.dtsx"  // Update this path
+        SQL_SERVER = "MySQLServer\\SQLInstance"
+        JOB_NAME = "MySSISJob"
+        LOG_FILE = "C:\\SSIS\\Logs\\SSIS_Log.txt"
+    }
+
+    stages {
+        stage('Execute SSIS Package') {
+            steps {
+                script {
+                    def psScript = """
+                    # Option 1: Execute SSIS using dtexec.exe
+                    Start-Process "dtexec.exe" -ArgumentList "/FILE `"$env:SSIS_PACKAGE_PATH`" /SERVER `"$env:SQL_SERVER`" /LOG `"$env:LOG_FILE`" /CHECKPOINTING OFF /REPORTING E" -Wait -NoNewWindow
+                    """
+
+                    // Execute PowerShell script in Jenkins
+                    powershell returnStatus: true, script: psScript
+                }
+            }
+        }
+
+        stage('Verify Execution') {
+            steps {
+                script {
+                    def checkJobStatus = """
+                    # Option 2: Check SQL Server Agent Job Execution
+                    Invoke-Sqlcmd -ServerInstance "$env:SQL_SERVER" -Query "EXEC msdb.dbo.sp_help_jobhistory @job_name = '$env:JOB_NAME'"
+                    """
+
+                    // Execute PowerShell script in Jenkins
+                    powershell returnStatus: true, script: checkJobStatus
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "SSIS Package executed successfully!"
+        }
+        failure {
+            echo "SSIS Package execution failed! Check logs at $env.LOG_FILE"
+        }
+    }
+}

@@ -21,7 +21,11 @@ pipeline {
                     def deltaPattern = /^\d{3}\.\d\.\d{3}$/ // Matches any other nnn.x.nnn (Delta Update)
                     // Check for Full Release
                     if (params.VERSION ==~ fullPattern) {
+<<<<<<< HEAD
+                        env.delta = '\$false'  
+=======
                         delta = 'true'
+>>>>>>> bf7b11753fb410dcd2c548eef71491dff19fc7d2
                             // Check for Delta Update
                             } else if (params.VERSION ==~ deltaPattern) {
                                 delta = 'false'

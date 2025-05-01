@@ -1,0 +1,6 @@
+$someDate = Get-Date "2025-03-25"
+if ($someDate -lt (Get-Date).AddDays(-30)) {
+    Write-Output "More than 30 days have passed."
+} else {
+    Write-Output "30 days have not yet passed."
+}
