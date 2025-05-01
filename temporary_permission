@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Manage AD Users and Groups') {
+            steps {
+                powershell '''
+# Load JSON
+$jsonPath = "C:\\Scripts\\userAccessList.json"
+$userList = Get-Content $jsonPath | ConvertFrom-Json
+
+foreach ($entry in $userList) {
+    $GroupName = $entry.GroupName
+    $username = $entry.UserName
+    $parts = $username -split '\\.'
+
+    $firstName = $parts[0]
+    $lastName = $parts[1]
+
+    if (Get-ADGroup -Filter {Name -eq $GroupName} -ErrorAction SilentlyContinue) {
+        Write-Host "Group already exists."
+    } else {
+        Write-Host "Group does not exist. Creating group..."
+
+        New-ADGroup -Name $GroupName `
+                    -SamAccountName $GroupName `
+                    -GroupScope Global `
+                    -GroupCategory Security `
+                    -Path "OU=Group,DC=lab,DC=local"
+    }
+
+    if (Get-ADUser -Filter {SamAccountName -eq $username} -ErrorAction SilentlyContinue) {
+        Write-Host "User already exists."
+    } else {
+        Write-Host "User does not exist. Creating user..."
+
+        New-ADUser -Verbose -Name "$username" `
+                   -GivenName $firstName `
+                   -Surname $lastName `
+                   -SamAccountName $username `
+                   -UserPrincipalName "$username@lab.local" `
+                   -Path "CN=Users,DC=lab,DC=local" `
+                   -AccountPassword (ConvertTo-SecureString "P@ssw0rd123" -AsPlainText -Force) `
+                   -Enabled $true
+    }
+}
+
+$today = Get-Date
+
+foreach ($entry in $userList) {
+    $user = $entry.UserName
+    $group = $entry.GroupName
+    $startDate = [datetime]$entry.StartDate
+    $endDate = $startDate.AddDays(30)
+
+    $isMember = (Get-ADGroupMember -Identity $group -Recursive | Where-Object { $_.SamAccountName -eq $user }) -ne $null
+
+    if ($today -ge $startDate -and $today -lt $endDate) {
+        if (-not $isMember) {
+            Write-Host "Adding $user to group $group"
+            Add-ADGroupMember -Identity $group -Members $user
+        } else {
+            Write-Host "$user is already a member of $group – no need to add"
+        }
+    } else {
+        if ($isMember) {
+            Write-Host "Removing $user from group $group – the range has ended"
+            Remove-ADGroupMember -Identity $group -Members $user -Confirm:$false
+        } else {
+            Write-Host "$user is not within the range and not a member – nothing to do"
+        }
+    }
+}
+                '''
+            }
+        }
+    }
+}
