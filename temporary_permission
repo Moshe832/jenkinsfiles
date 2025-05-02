@@ -5,13 +5,15 @@ pipeline {
         stage('Manage AD Users and Groups') {
             steps {
                 powershell '''
-try {
+<#try {
     # Import Active Directory module
     Import-Module ActiveDirectory -ErrorAction Stop
 } catch {
     Write-Error "Failed to import Active Directory module. Error: $_"
     exit 1
+    
 }
+    #>
 try {
     # Load JSON
     $jsonPath = "C:\\Scripts\\userAccessList.json"
