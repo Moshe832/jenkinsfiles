@@ -12,11 +12,9 @@ try {
     Write-Error "Failed to import Active Directory module. Error: $_"
     exit 1
 }
- 
-# Load JSON
-$jsonPath = "C:\\Scripts\\userAccessList.json"
-            }
 try {
+    # Load JSON
+    $jsonPath = "C:\\Scripts\\userAccessList.json"
     $userList = Get-Content $jsonPath | ConvertFrom-Json
 } catch {
     Write-Error "Failed to load or parse JSON file at $jsonPath. Error: $_"
@@ -30,7 +28,7 @@ foreach ($entry in $userList) {
 
     $firstName = $parts[0]
     $lastName = $parts[1]
-
+    $parts = $username -split '\.'
     try {
         if (Get-ADGroup -Filter {Name -eq $GroupName} -ErrorAction SilentlyContinue) {
             Write-Host "Group already exists."
@@ -61,7 +59,7 @@ foreach ($entry in $userList) {
                        -AccountPassword (ConvertTo-SecureString "P@ssw0rd123" -AsPlainText -Force) `
                        -Enabled $true
         }
-    } catch {
+                       -Path "OU=Users,DC=lab,DC=local" `
         Write-Error "Error managing user $username. Error: $_"
         continue
     }
