@@ -45,11 +45,18 @@ try {
 foreach ($entry in $userList) {
     $GroupName = $entry.GroupName
     $username = $entry.UserName
-    $parts = $username -split '\\\\.'
+    $parts = $username -split '\\.'
 
     $firstName = $parts[0]
     $lastName = $parts[1]
     $parts = $username -split '\\.'
+    echo
+    echo "First Name: $firstName"
+    echo "Last Name: $lastName"
+    echo "Group Name: $GroupName"
+    echo "User Name: $username"
+    echo "User List: $userList"
+    echo "Entry: $entry"
     try {
         if (Get-ADGroup -Filter {Name -eq $GroupName} -ErrorAction SilentlyContinue) {
             Write-Host "Group already exists."
