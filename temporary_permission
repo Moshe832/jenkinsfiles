@@ -7,7 +7,13 @@ pipeline {
                 powershell '''
 # Load JSON
 $jsonPath = "C:\\Scripts\\userAccessList.json"
-$userList = Get-Content $jsonPath | ConvertFrom-Json
+
+try {
+    $userList = Get-Content $jsonPath | ConvertFrom-Json
+} catch {
+    Write-Error "Failed to load or parse JSON file at $jsonPath. Error: $_"
+    exit 1
+}
 
 foreach ($entry in $userList) {
     $GroupName = $entry.GroupName
@@ -17,31 +23,39 @@ foreach ($entry in $userList) {
     $firstName = $parts[0]
     $lastName = $parts[1]
 
-    if (Get-ADGroup -Filter {Name -eq $GroupName} -ErrorAction SilentlyContinue) {
-        Write-Host "Group already exists."
-    } else {
-        Write-Host "Group does not exist. Creating group..."
-
-        New-ADGroup -Name $GroupName `
-                    -SamAccountName $GroupName `
-                    -GroupScope Global `
-                    -GroupCategory Security `
-                    -Path "OU=Group,DC=lab,DC=local"
+    try {
+        if (Get-ADGroup -Filter {Name -eq $GroupName} -ErrorAction SilentlyContinue) {
+            Write-Host "Group already exists."
+        } else {
+            Write-Host "Group does not exist. Creating group..."
+            New-ADGroup -Name $GroupName `
+                        -SamAccountName $GroupName `
+                        -GroupScope Global `
+                        -GroupCategory Security `
+                        -Path "OU=Group,DC=lab,DC=local"
+        }
+    } catch {
+        Write-Error "Error managing group $GroupName. Error: $_"
+        continue
     }
 
-    if (Get-ADUser -Filter {SamAccountName -eq $username} -ErrorAction SilentlyContinue) {
-        Write-Host "User already exists."
-    } else {
-        Write-Host "User does not exist. Creating user..."
-
-        New-ADUser -Verbose -Name "$username" `
-                   -GivenName $firstName `
-                   -Surname $lastName `
-                   -SamAccountName $username `
-                   -UserPrincipalName "$username@lab.local" `
-                   -Path "CN=Users,DC=lab,DC=local" `
-                   -AccountPassword (ConvertTo-SecureString "P@ssw0rd123" -AsPlainText -Force) `
-                   -Enabled $true
+    try {
+        if (Get-ADUser -Filter {SamAccountName -eq $username} -ErrorAction SilentlyContinue) {
+            Write-Host "User already exists."
+        } else {
+            Write-Host "User does not exist. Creating user..."
+            New-ADUser -Verbose -Name "$username" `
+                       -GivenName $firstName `
+                       -Surname $lastName `
+                       -SamAccountName $username `
+                       -UserPrincipalName "$username@lab.local" `
+                       -Path "CN=Users,DC=lab,DC=local" `
+                       -AccountPassword (ConvertTo-SecureString "P@ssw0rd123" -AsPlainText -Force) `
+                       -Enabled $true
+        }
+    } catch {
+        Write-Error "Error managing user $username. Error: $_"
+        continue
     }
 }
 
@@ -53,22 +67,32 @@ foreach ($entry in $userList) {
     $startDate = [datetime]$entry.StartDate
     $endDate = $startDate.AddDays(30)
 
-    $isMember = (Get-ADGroupMember -Identity $group -Recursive | Where-Object { $_.SamAccountName -eq $user }) -ne $null
+    try {
+        $isMember = (Get-ADGroupMember -Identity $group -Recursive | Where-Object { $_.SamAccountName -eq $user }) -ne $null
+    } catch {
+        Write-Error "Error checking membership for user $user in group $group. Error: $_"
+        continue
+    }
 
-    if ($today -ge $startDate -and $today -lt $endDate) {
-        if (-not $isMember) {
-            Write-Host "Adding $user to group $group"
-            Add-ADGroupMember -Identity $group -Members $user
+    try {
+        if ($today -ge $startDate -and $today -lt $endDate) {
+            if (-not $isMember) {
+                Write-Host "Adding $user to group $group"
+                Add-ADGroupMember -Identity $group -Members $user
+            } else {
+                Write-Host "$user is already a member of $group – no need to add"
+            }
         } else {
-            Write-Host "$user is already a member of $group – no need to add"
+            if ($isMember) {
+                Write-Host "Removing $user from group $group – the range has ended"
+                Remove-ADGroupMember -Identity $group -Members $user -Confirm:$false
+            } else {
+                Write-Host "$user is not within the range and not a member – nothing to do"
+            }
         }
-    } else {
-        if ($isMember) {
-            Write-Host "Removing $user from group $group – the range has ended"
-            Remove-ADGroupMember -Identity $group -Members $user -Confirm:$false
-        } else {
-            Write-Host "$user is not within the range and not a member – nothing to do"
-        }
+    } catch {
+        Write-Error "Error managing membership for user $user in group $group. Error: $_"
+        continue
     }
 }
                 '''
