@@ -33,7 +33,7 @@ stages{
     #>
 try {
     # Load JSON
-
+     wirte-host "$env:workspace"           
     $jsonPath = "\\$env:workspace\\userAccessList.json"
     $userList = Get-Content $jsonPath | ConvertFrom-Json
 } catch {
