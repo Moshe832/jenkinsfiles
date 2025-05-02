@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent (labagent =) {
+        label 'dc'
+    }
 
     stages {
         stage('Manage AD Users and Groups') {
