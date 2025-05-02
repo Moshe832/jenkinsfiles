@@ -9,6 +9,12 @@ stages{
                 script {
                     checkout scm
                     echo "Workspace: ${workspace}"
+                    echo "Current Directory: ${pwd()}"
+                    echo "Jenkins Home: ${JENKINS_HOME}"
+                    echo "Jenkins URL: ${JENKINS_URL}"
+                    echo "Jenkins Node: ${NODE_NAME}"
+                 
+
                 }
             }
         }
@@ -28,7 +34,7 @@ stages{
 try {
     # Load JSON
 
-    $jsonPath = "C:\\Scripts\\userAccessList.json"
+    $jsonPath = "C:\\${workspace}\\userAccessList.json"
     $userList = Get-Content $jsonPath | ConvertFrom-Json
 } catch {
     Write-Error "Failed to load or parse JSON file at $jsonPath. Error: $_"
