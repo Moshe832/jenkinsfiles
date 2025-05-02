@@ -34,7 +34,7 @@ stages{
 try {
     # Load JSON
      write-host "$env:workspace"           
-    $jsonPath = "\$env:workspace\\userAccessList.json"
+    $jsonPath = "\$env:workspace\\userAccessList"
       write-host "JSON Path: $jsonPath"
     $userList = Get-Content $jsonPath | ConvertFrom-Json -verbose -ErrorAction Stop
 } catch {
