@@ -3,27 +3,17 @@ pipeline {
         label 'dc'
     }
 
-    stages {
-        stage('Preparation') {
+stages{ 
+        stage('Checkout') {
             steps {
                 script {
-                    env.ENVIRONMENT = 'DC'
-            
-        env.JOB_NAME = "${env.JOB_NAME}"
-        env.JOB_URL = "${env.JOB_URL}"  
-        env.BUILD_NUMBER = "${env.BUILD_NUMBER}"
-        env.BUILD_URL = "${env.BUILD_URL}"
-        env.BUILD_ID = "${env.BUILD_ID}"
-        env.WORKSPACE = "${env.WORKSPACE}"
-
+                    checkout scm
+                    echo "Workspace: ${workspace}"
+                }
             }
         }
-        stage('Print Env') {
-            echo "Deploying to ${env.ENVIRONMENT}"
-        }
-    }
 
-        stage('Manage AD Users and Groups') {
+ stage('Manage AD Users and Groups') {
             steps {
                 powershell '''
 <#try {
@@ -37,6 +27,7 @@ pipeline {
     #>
 try {
     # Load JSON
+
     $jsonPath = "C:\\Scripts\\userAccessList.json"
     $userList = Get-Content $jsonPath | ConvertFrom-Json
 } catch {
