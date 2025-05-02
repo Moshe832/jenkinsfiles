@@ -45,7 +45,7 @@ try {
 foreach ($entry in $userList) {
     $GroupName = $entry.GroupName
     $username = $entry.UserName
-    $parts = $username -split '\\\.'
+    $parts = $username -split '\\\\.'
 
     $firstName = $parts[0]
     $lastName = $parts[1]
