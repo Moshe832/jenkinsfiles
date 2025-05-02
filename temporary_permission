@@ -4,6 +4,25 @@ pipeline {
     }
 
     stages {
+        stage('Preparation') {
+            steps {
+                script {
+                    env.ENVIRONMENT = 'DC'
+            
+        env.JOB_NAME = "${env.JOB_NAME}"
+        env.JOB_URL = "${env.JOB_URL}"  
+        env.BUILD_NUMBER = "${env.BUILD_NUMBER}"
+        env.BUILD_URL = "${env.BUILD_URL}"
+        env.BUILD_ID = "${env.BUILD_ID}"
+        env.WORKSPACE = "${env.WORKSPACE}"
+
+            }
+        }
+        stage('Print Env') {
+            echo "Deploying to ${env.ENVIRONMENT}"
+        }
+    }
+
         stage('Manage AD Users and Groups') {
             steps {
                 powershell '''
