@@ -35,7 +35,8 @@ try {
     # Load JSON
      write-host "$env:workspace"           
     $jsonPath = "\\$env:workspace\\userAccessList.json"
-    $userList = Get-Content $jsonPath | ConvertFrom-Json
+      write-host "JSON Path: $jsonPath"
+    $userList = Get-Content $jsonPath | ConvertFrom-Json -verbose -ErrorAction Stop
 } catch {
     Write-Error "Failed to load or parse JSON file at $jsonPath. Error: $_"
     exit 1
