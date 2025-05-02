@@ -55,11 +55,11 @@ foreach ($entry in $userList) {
                        -Surname $lastName `
                        -SamAccountName $username `
                        -UserPrincipalName "$username@lab.local" `
-                       -Path "CN=Users,DC=lab,DC=local" `
+                       -Path "OU=Users,DC=lab,DC=local" `
                        -AccountPassword (ConvertTo-SecureString "P@ssw0rd123" -AsPlainText -Force) `
                        -Enabled $true
         }
-                       -Path "OU=Users,DC=lab,DC=local" `
+    } catch {
         Write-Error "Error managing user $username. Error: $_"
         continue
     }
