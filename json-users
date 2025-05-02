@@ -19,4 +19,20 @@
     "GroupName": "ADMIN-1234k78",
     "StartDate": "2025-05-01"
   }
+  ,
+  {
+    "UserName": "dada.cohen",
+    "GroupName": "ADMIN-1234J78",
+    "StartDate": "2025-05-01"
+  },
+  {
+    "UserName": "tamar.chong",
+    "GroupName": "ADMIN-1234S78",
+    "StartDate": "2025-05-01"
+  },
+  {
+    "UserName": "Moshe.haim",
+    "GroupName": "ADMIN-1234S78",
+    "StartDate": "2025-05-01"
+  }
 ]
