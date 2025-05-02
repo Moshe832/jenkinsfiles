@@ -34,7 +34,7 @@ stages{
 try {
     # Load JSON
 
-    $jsonPath = "C:\\${workspace}\\userAccessList.json"
+    $jsonPath = "C:\\$env:workspace\\userAccessList.json"
     $userList = Get-Content $jsonPath | ConvertFrom-Json
 } catch {
     Write-Error "Failed to load or parse JSON file at $jsonPath. Error: $_"
