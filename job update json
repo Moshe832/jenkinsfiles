@@ -7,11 +7,16 @@ pipeline {
         string(name: 'StartDate', description: 'Start date (yyyy-MM-dd)')
     }
 
+    environment {
+        JSON_PATH = "D:\\$WORKSPACE\\userAccessList"
+        REPO_DIR = "D:\\$WORKSPACE"
+    }
+
     stages {
         stage('Append to JSON') {
             steps {
                 powershell '''
-                $jsonPath = "D:\\Manage\\userAccessList"
+                $jsonPath = "$env:JSON_PATH"
                 $newEntry = @{
                     UserName  = "$env:UserName"
                     GroupName = "$env:GroupName"
@@ -32,11 +37,30 @@ pipeline {
                 if (-not $exists) {
                     $data += New-Object PSObject -Property $newEntry
                     $data | ConvertTo-Json -Depth 5 | Set-Content -Path $jsonPath
-                    Write-Host "Entry appended to JSON"
+                    Write-Host "Entry appended"
                 } else {
                     Write-Host "Entry already exists — skipping append"
                 }
                 '''
+            }
+        }
+
+        stage('Git Commit & Tag & Push') {
+            steps {
+                dir("${env.REPO_DIR}") {
+                    script {
+                        def tagName = "userAccessList-${new Date().format('yyyyMMdd-HHmm')}"
+                        bat """
+                        git config user.name "jenkins"
+                        git config user.email "jenkins@example.com"
+                        git add userAccessList
+                        git commit -m "Update userAccessList via Jenkins"
+                        git tag ${tagName}
+                        git push origin main
+                        git push origin ${tagName}
+                        """
+                    }
+                }
             }
         }
 
