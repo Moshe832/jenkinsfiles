@@ -1,0 +1,13 @@
+stage('Git Checkout Latest Tag') {
+    steps {
+        dir("D:\\$WORKSPACE") {
+            bat '''
+            git fetch --tags
+            for /f %%t in ('git tag --sort=-creatordate') do (
+                git checkout %%t
+                goto :eof
+            )
+            '''
+        }
+    }
+}
