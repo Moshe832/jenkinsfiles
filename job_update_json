@@ -12,7 +12,35 @@ pipeline {
         REPO_DIR = "D:\\$WORKSPACE"
     }
 
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+        timeout(time: 30, unit: 'MINUTES')
+    }
+
     stages {
+        stage('Prepare') {
+            steps {
+                script {
+                    println "Preparing environment..."
+                    println "UserName: ${params.UserName}"
+                    println "GroupName: ${params.GroupName}"
+                    println "StartDate: ${params.StartDate}"
+                }
+            }
+        }
+        stage('Checkout') {
+            steps {
+                script {
+                    checkout scm
+                    println "Workspace: ${env.WORKSPACE}"
+                    println "Current Directory: ${pwd()}"
+                    println "Jenkins Home: ${env.JENKINS_HOME}"
+                    println "Jenkins URL: ${env.JENKINS_URL}"
+                    println "Jenkins Node: ${env.NODE_NAME}"
+                }
+            }
+        }
         stage('Append to JSON') {
             steps {
                 powershell '''
@@ -37,14 +65,13 @@ pipeline {
                 if (-not $exists) {
                     $data += New-Object PSObject -Property $newEntry
                     $data | ConvertTo-Json -Depth 5 | Set-Content -Path $jsonPath
-                    Write-Host "Entry appended"
+                    Write-Output "Entry appended"
                 } else {
-                    Write-Host "Entry already exists — skipping append"
+                    Write-Output "Entry already exists — skipping append"
                 }
                 '''
             }
         }
-
         stage('Git Commit & Tag & Push') {
             steps {
                 dir("${env.REPO_DIR}") {
@@ -63,11 +90,30 @@ pipeline {
                 }
             }
         }
-
         stage('Trigger AD Job') {
             steps {
                 build job: 'Manage-AD-Users-And-Groups'
             }
         }
     }
+
+    post {
+        always {
+            script {
+                println "Cleaning up..."
+                deleteDir()
+            }
+        }
+        success {
+            script {
+                println "Pipeline completed successfully."
+            }
+        }
+        failure {
+            script {
+                println "Pipeline failed."
+            }
+        }
+    }
+
 }
