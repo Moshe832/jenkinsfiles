@@ -28,8 +28,15 @@ pipeline {
         stage('Prepare') {
             steps {
                 script {
-                    // Set the JSON path dynamically based on the current workspace
-                    env.JSON_PATH = "${env.WORKSPACE}\\userAccessList.json"
+                    // Ensure the workspace is available
+                    if (env.WORKSPACE) {
+                        // Set the JSON path dynamically with double backslashes for Windows
+                        env.JSON_PATH = "${env.WORKSPACE.replaceAll('\\\\', '\\\\\\\\')}\\userAccessList.json"
+                        echo "JSON Path: ${env.JSON_PATH}"
+                    } else {
+                        error "Workspace is not available."
+                    }
+                    
                     println "Preparing environment..."
                     println "UserName: ${params.UserName}"
                     println "GroupName: ${params.GroupName}"
@@ -42,6 +49,11 @@ pipeline {
         stage('Append to JSON') {
             steps {
                 powershell '''
+                if (-not $env:JSON_PATH) {
+                    Write-Error "JSON_PATH is not defined."
+                    exit 1
+                }
+
                 $jsonPath = "$env:JSON_PATH"
                 $newEntry = @{
                     UserName  = "$env:UserName"
