@@ -32,37 +32,7 @@ pipeline {
             }
         }
 
-        stage('Append to JSON') {
-            steps {
-                powershell '''
-                $jsonPath = "$env:JSON_PATH"
-                $newEntry = @{
-                    UserName  = "$env:UserName"
-                    GroupName = "$env:GroupName"
-                    StartDate = "$env:StartDate"
-                }
-
-                if (Test-Path $jsonPath) {
-                    $data = Get-Content $jsonPath | ConvertFrom-Json
-                } else {
-                    $data = @()
-                }
-
-                $exists = $data | Where-Object {
-                    $_.UserName -eq $newEntry.UserName -and
-                    $_.GroupName -eq $newEntry.GroupName
-                }
-
-                if (-not $exists) {
-                    $data += New-Object PSObject -Property $newEntry
-                    $data | ConvertTo-Json -Depth 5 | Set-Content -Path $jsonPath
-                    Write-Output "Entry appended"
-                } else {
-                    Write-Output "Entry already exists — skipping append"
-                }
-                '''
-            }
-        }
+ 
         stage('Git Commit & Tag & Push') {
             steps {
                 dir("${env.REPO_DIR}") {
@@ -84,25 +54,6 @@ pipeline {
         stage('Trigger AD Job') {
             steps {
                 build job: 'Manage-AD-Users-And-Groups'
-            }
-        }
-    }
-
-    post {
-        always {
-            script {
-                println "Cleaning up..."
-                deleteDir()
-            }
-        }
-        success {
-            script {
-                println "Pipeline completed successfully."
-            }
-        }
-        failure {
-            script {
-                println "Pipeline failed."
             }
         }
     }
