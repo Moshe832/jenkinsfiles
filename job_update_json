@@ -31,7 +31,7 @@ pipeline {
                     // Ensure the workspace is available
                     if (env.WORKSPACE) {
                         // Set the JSON path dynamically with double backslashes for Windows
-                        env.JSON_PATH = "${env.WORKSPACE.replaceAll('\\\\', '\\\\\\\\')}\\userAccessListSS"
+                        env.JSON_PATH = "${env.WORKSPACE.replaceAll('\\\\', '\\\\\\\\')}\\userAccessListS"
                         echo "JSON Path: ${env.JSON_PATH}"
                     } else {
                         error "Workspace is not available."
