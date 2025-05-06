@@ -20,6 +20,18 @@ pipeline {
     }
 
     stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    checkout scm
+                    echo "Workspace: ${env.WORKSPACE}"
+                    echo "Current Directory: ${pwd()}"
+                    echo "Jenkins Home: ${env.JENKINS_HOME}"
+                    echo "Jenkins URL: ${env.JENKINS_URL}"
+                    echo "Jenkins Node: ${env.NODE_NAME}"
+                }
+            }
+        }
         stage('Prepare') {
             steps {
                 script {
@@ -30,18 +42,7 @@ pipeline {
                 }
             }
         }
-        stage('Checkout') {
-            steps {
-                script {
-                    checkout scm
-                    println "Workspace: ${env.WORKSPACE}"
-                    println "Current Directory: ${pwd()}"
-                    println "Jenkins Home: ${env.JENKINS_HOME}"
-                    println "Jenkins URL: ${env.JENKINS_URL}"
-                    println "Jenkins Node: ${env.NODE_NAME}"
-                }
-            }
-        }
+
         stage('Append to JSON') {
             steps {
                 powershell '''
