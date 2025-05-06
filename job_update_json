@@ -8,7 +8,8 @@ pipeline {
     }
 
     environment {
-        JSON_PATH = "D:\\$WORKSPACE\\userAccessList"
+        JSON_PATH = "D:\\$WORKSPACE\\userAccessList.json"
+        
         REPO_DIR = "D:\\$WORKSPACE"
     }
 
