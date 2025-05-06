@@ -8,7 +8,7 @@ pipeline {
     }
 
     environment {
-        JSON_PATH = ''  // Default empty, will be set dynamically in 'Prepare' stage
+        JSON_PATH = 'c:\\node\\workspace\\userAccessList'
     }
 
     stages {
