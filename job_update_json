@@ -8,7 +8,7 @@ pipeline {
     }
 
     environment {
-        JSON_PATH = 'C:\\${env.WORKSPACE}\\userAccessList.json'
+        JSON_PATH = C:\\${env.WORKSPACE}\\userAccessList.json
     }
 
     stages {
