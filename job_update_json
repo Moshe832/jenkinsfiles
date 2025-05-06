@@ -7,11 +7,11 @@ pipeline {
         string(name: 'StartDate', description: 'Start date (yyyy-MM-dd)')
     }
 
-   // environment {
-       // JSON_PATH = "D:\\$WORKSPACE\\userAccessList"
+   environment {
+        JSON_PATH = "D:\\$WORKSPACE\\userAccessList"
         
-       // REPO_DIR = "D:\\$WORKSPACE"
-//    }
+        REPO_DIR = "D:\\$WORKSPACE"
+   }
 
     options {
         timestamps()
