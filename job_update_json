@@ -8,7 +8,7 @@ pipeline {
     }
 
     environment {
-        JSON_PATH = C:\\${env.WORKSPACE}\\userAccessList.json
+        JSON_PATH = ''  // Default empty, will be set dynamically in 'Prepare' stage
     }
 
     stages {
@@ -21,6 +21,20 @@ pipeline {
                     echo "Jenkins Home: ${env.JENKINS_HOME}"
                     echo "Jenkins URL: ${env.JENKINS_URL}"
                     echo "Jenkins Node: ${env.NODE_NAME}"
+                }
+            }
+        }
+
+        stage('Prepare') {
+            steps {
+                script {
+                    // Set the JSON path dynamically based on the current workspace
+                    env.JSON_PATH = "${env.WORKSPACE}\\userAccessList.json"
+                    println "Preparing environment..."
+                    println "UserName: ${params.UserName}"
+                    println "GroupName: ${params.GroupName}"
+                    println "StartDate: ${params.StartDate}"
+                    println "JSON Path: ${env.JSON_PATH}"
                 }
             }
         }
@@ -54,17 +68,6 @@ pipeline {
                     Write-Output "Entry already exists — skipping append"
                 }
                 '''
-            }
-        }
-
-        stage('Prepare') {
-            steps {
-                script {
-                    println "Preparing environment..."
-                    println "UserName: ${params.UserName}"
-                    println "GroupName: ${params.GroupName}"
-                    println "StartDate: ${params.StartDate}"
-                }
             }
         }
 
