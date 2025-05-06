@@ -7,6 +7,9 @@ pipeline {
         string(name: 'StartDate', description: 'Start date (yyyy-MM-dd)')
     }
 
+    environment {
+        JSON_PATH = 'C:\\${env.WORKSPACE}\\userAccessList.json'
+    }
 
     stages {
         stage('Checkout') {
@@ -21,6 +24,39 @@ pipeline {
                 }
             }
         }
+
+        stage('Append to JSON') {
+            steps {
+                powershell '''
+                $jsonPath = "$env:JSON_PATH"
+                $newEntry = @{
+                    UserName  = "$env:UserName"
+                    GroupName = "$env:GroupName"
+                    StartDate = "$env:StartDate"
+                }
+
+                if (Test-Path $jsonPath) {
+                    $data = Get-Content $jsonPath | ConvertFrom-Json
+                } else {
+                    $data = @()
+                }
+
+                $exists = $data | Where-Object {
+                    $_.UserName -eq $newEntry.UserName -and
+                    $_.GroupName -eq $newEntry.GroupName
+                }
+
+                if (-not $exists) {
+                    $data += New-Object PSObject -Property $newEntry
+                    $data | ConvertTo-Json -Depth 5 | Set-Content -Path $jsonPath
+                    Write-Output "Entry appended"
+                } else {
+                    Write-Output "Entry already exists — skipping append"
+                }
+                '''
+            }
+        }
+
         stage('Prepare') {
             steps {
                 script {
@@ -32,13 +68,10 @@ pipeline {
             }
         }
 
- 
-
         stage('Trigger AD Job') {
             steps {
                 build job: 'Manage-AD-Users-And-Groups'
             }
         }
     }
-
 }
