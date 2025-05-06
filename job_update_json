@@ -63,7 +63,7 @@ pipeline {
 
                 if (Test-Path $jsonPath) {
                     $data = Get-Content $jsonPath | ConvertFrom-Json
-                    wirte-host $data
+                    write-host $data
                 } else {
                     $data = @()
                 }
