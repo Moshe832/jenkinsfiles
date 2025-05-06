@@ -33,24 +33,7 @@ pipeline {
         }
 
  
-        stage('Git Commit & Tag & Push') {
-            steps {
-                dir("${env.REPO_DIR}") {
-                    script {
-                        def tagName = "userAccessList-${new Date().format('yyyyMMdd-HHmm')}"
-                        bat """
-                        git config user.name "jenkins"
-                        git config user.email "jenkins@example.com"
-                        git add userAccessList
-                        git commit -m "Update userAccessList via Jenkins"
-                        git tag ${tagName}
-                        git push origin main
-                        git push origin ${tagName}
-                        """
-                    }
-                }
-            }
-        }
+
         stage('Trigger AD Job') {
             steps {
                 build job: 'Manage-AD-Users-And-Groups'
