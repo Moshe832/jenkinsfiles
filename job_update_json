@@ -1,6 +1,6 @@
 pipeline {
     agent { label 'dc' }
-z
+
     parameters {
         string(name: 'UserName', description: 'Username (e.g., john.doe)', defaultValue: 'john.doe')
         string(name: 'GroupName', description: 'Group name', defaultValue: 'Domain Users')
