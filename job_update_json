@@ -1,3 +1,4 @@
+@CompileStatic
 pipeline {
     agent { label 'dc' }
 
@@ -28,15 +29,14 @@ pipeline {
         stage('Prepare') {
             steps {
                 script {
-                    // Ensure the workspace is available
-                    if (env.WORKSPACE) {
-                        // Set the JSON path dynamically with double backslashes for Windows
-                        //env.JSON_PATH = "${env.WORKSPACE.replaceAll('\\\\', '\\\\\\\\')}\\userAccessListS"
-                        echo "JSON Path: ${env.JSON_PATH}"
-                    } else {
-                        error "Workspace is not available."
+                    if (!env.WORKSPACE) {
+                        error 'Workspace is not available.'
                     }
+                    // Set the JSON path dynamically with double backslashes for Windows
+                    //env.JSON_PATH = "${env.WORKSPACE.replaceAll('\\\\', '\\\\\\\\')}\\userAccessListS"
+                    echo "JSON Path: ${env.JSON_PATH}"
                     
+                    println 'Preparing environment...'
                     println "Preparing environment..."
                     println "UserName: ${params.UserName}"
                     println "GroupName: ${params.GroupName}"
@@ -61,12 +61,19 @@ pipeline {
                     StartDate = "$env:StartDate"
                 }
 
-                if (Test-Path $jsonPath) {
-                    $data = Get-Content $jsonPath | ConvertFrom-Json
-                    write-host $data
-                } else {
-                    $data = @()
-                }
+                iif (Test-Path $jsonPath) {
+    $data = Get-Content $jsonPath | ConvertFrom-Json
+
+    # Force into array if it's a single object
+    if ($data -isnot [System.Collections.IEnumerable] -or $data -is [string]) {
+        $data = @($data)
+    }
+} else {
+    $data = @()  # Initialize as empty array
+}
+
+$data += New-Object PSObject -Property $newEntry
+
 
                 $exists = $data | Where-Object {
                     $_.UserName -eq $newEntry.UserName -and
