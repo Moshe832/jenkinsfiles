@@ -51,18 +51,7 @@ pipeline {
             }
         }
 
-    post {
-        always {
-            echo 'Cleaning up...'
-            deleteDir() // Deletes the workspace
-        }
-        success {
-            echo 'Pipeline completed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed!'
-        }
-    }
+
 }
 
 }
