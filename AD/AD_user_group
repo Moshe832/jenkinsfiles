@@ -46,7 +46,7 @@ pipeline {
                         git config user.email "$env:GIT_USER@example.com"
                         git add users.json
                         git commit -m "Updated groups for jdoe via Jenkins"
-                        git push https://$env:GIT_USER:$env:GIT_PASS@https://github.com/Moshe832/jenkinsfiles.git HEAD:main
+                        git push $env:GIT_USER:$env:GIT_PASS@https://github.com/Moshe832/jenkinsfiles.git HEAD:main
                     '''
                 }
             }
