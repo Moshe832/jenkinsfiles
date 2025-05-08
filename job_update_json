@@ -1,4 +1,3 @@
-@CompileStatic
 pipeline {
     agent { label 'dc' }
 
@@ -19,9 +18,6 @@ pipeline {
                     checkout scm
                     echo "Workspace: ${env.WORKSPACE}"
                     echo "Current Directory: ${pwd()}"
-                    echo "Jenkins Home: ${env.JENKINS_HOME}"
-                    echo "Jenkins URL: ${env.JENKINS_URL}"
-                    echo "Jenkins Node: ${env.NODE_NAME}"
                 }
             }
         }
@@ -32,16 +28,7 @@ pipeline {
                     if (!env.WORKSPACE) {
                         error 'Workspace is not available.'
                     }
-                    // Set the JSON path dynamically with double backslashes for Windows
-                    //env.JSON_PATH = "${env.WORKSPACE.replaceAll('\\\\', '\\\\\\\\')}\\userAccessListS"
                     echo "JSON Path: ${env.JSON_PATH}"
-                    
-                    println 'Preparing environment...'
-                    println "Preparing environment..."
-                    println "UserName: ${params.UserName}"
-                    println "GroupName: ${params.GroupName}"
-                    println "StartDate: ${params.StartDate}"
-                    println "JSON Path: ${env.JSON_PATH}"
                 }
             }
         }
@@ -61,19 +48,16 @@ pipeline {
                     StartDate = "$env:StartDate"
                 }
 
-                iif (Test-Path $jsonPath) {
-    $data = Get-Content $jsonPath | ConvertFrom-Json
+                if (Test-Path $jsonPath) {
+                    $data = Get-Content $jsonPath | ConvertFrom-Json
 
-    # Force into array if it's a single object
-    if ($data -isnot [System.Collections.IEnumerable] -or $data -is [string]) {
-        $data = @($data)
-    }
-} else {
-    $data = @()  # Initialize as empty array
-}
-
-$data += New-Object PSObject -Property $newEntry
-
+                    # Force into array if it's a single object
+                    if ($data -isnot [System.Collections.IEnumerable] -or $data -is [string]) {
+                        $data = @($data)
+                    }
+                } else {
+                    $data = @()  # Initialize as empty array
+                }
 
                 $exists = $data | Where-Object {
                     $_.UserName -eq $newEntry.UserName -and
@@ -98,3 +82,7 @@ $data += New-Object PSObject -Property $newEntry
         }
     }
 }
+            
+
+
+            
