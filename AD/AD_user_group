@@ -1,52 +1,56 @@
+
 pipeline {
     agent {
         label 'windows' // ודא שיש לך agent עם תווית מתאימה
     }
 
-    stages {
         stage('Checkout Code') {
             steps {
                 git url: 'https://github.com/Moshe832/jenkinsfiles.git', branch: 'main'
-                
+            }
         }
-
+        }
 
 
         stage('Update JSON with PowerShell') {
             steps {
                 powershell '''
-                $jsonPath = "$env:WORKSPACE\\json-users"
-                $json = Get-Content $jsonPath | ConvertFrom-Json
+                    $jsonPath = "$env:WORKSPACE\\json-users"
+                    $json = Get-Content $jsonPath | ConvertFrom-Json
 
-                foreach ($user in $json.users) {
-                    if ($user.username -eq "jdoe") {
-                        if ($user.groups -notcontains "admins") {
-                            $user.groups += "admins"
+                    foreach ($user in $json.users) {
+                        if ($user.username -eq "jdoe") {
+                            if ($user.groups -notcontains "admins") {
+                                $user.groups += "admins"
+                            }
                         }
                     }
-                }
 
-                $json | ConvertTo-Json -Depth 10 | Set-Content $jsonPath -Encoding UTF8
+                    $json | ConvertTo-Json -Depth 10 | Set-Content $jsonPath -Encoding UTF8
                 '''
             }
         }
-
+        
         stage('Commit and Push Changes') {
             steps {
-                withCredentials([usernamePassword(credentialsId: '2cff7073-035d-4f21-878c-062efaa77cd', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: '2cff7073-035d-4f21-878c-062efaa77cd',
+                        usernameVariable: 'GIT_USER',
+                        passwordVariable: 'GIT_PASS'
+                    )
+                ]) {
                     powershell '''
-                    git config user.name "$env:GIT_USER"
-                    git config user.email "$env:GIT_USER@example.com"
-                    git add users.json
-                    git commit -m "Updated groups for jdoe via Jenkins"
-                    git push https://$env:GIT_USER:$env:GIT_PASS@https://github.com/Moshe832/jenkinsfiles.git HEAD:main
+                        git config user.name "$env:GIT_USER"
+                        git config user.email "$env:GIT_USER@example.com"
+                        git add users.json
+                        git commit -m "Updated groups for jdoe via Jenkins"
+                        git push https://$env:GIT_USER:$env:GIT_PASS@https://github.com/Moshe832/jenkinsfiles.git HEAD:main
                     '''
                 }
             }
         }
-    }
-}
-}
+
     post {
         always {
             echo 'Cleaning up...'
