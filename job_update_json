@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'dc' }
+    agent { label 'dc01' }
 
     parameters {
         string(name: 'UserName', description: 'Username (e.g., john.doe)', defaultValue: 'john.doe')
@@ -8,7 +8,7 @@ pipeline {
     }
 
     environment {
-        JSON_PATH = 'c:\\node\\workspace\\userAccessList'
+        JSON_PATH = 'c:\\node\\userAccessList'
     }
 
     stages {
