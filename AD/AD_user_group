@@ -9,7 +9,7 @@ pipeline {
                 git url: 'https://github.com/Moshe832/jenkinsfiles.git', branch: 'main'
             }
         }
-        }
+        
 
 
         stage('Update JSON with PowerShell') {
@@ -65,3 +65,4 @@ pipeline {
     }
 }
 
+}
