@@ -7,8 +7,14 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 git url: 'https://github.com/Moshe832/jenkinsfiles.git', branch: 'main'
-            }
+                
         }
+
+        environment {
+
+            // הגדר את מזהה האישורים שלך כאן
+            git-creds = "2cff7073-035d-4f21-878c-062efaa77cd"
+            }
 
         stage('Update JSON with PowerShell') {
             steps {
