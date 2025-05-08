@@ -10,11 +10,7 @@ pipeline {
                 
         }
 
-        environment {
 
-            // הגדר את מזהה האישורים שלך כאן
-            git-creds = "2cff7073-035d-4f21-878c-062efaa77cd"
-            }
 
         stage('Update JSON with PowerShell') {
             steps {
@@ -37,7 +33,7 @@ pipeline {
 
         stage('Commit and Push Changes') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'git-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                withCredentials([usernamePassword(credentialsId: '2cff7073-035d-4f21-878c-062efaa77cd', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
                     powershell '''
                     git config user.name "$env:GIT_USER"
                     git config user.email "$env:GIT_USER@example.com"
