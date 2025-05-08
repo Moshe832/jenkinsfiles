@@ -3,7 +3,7 @@ pipeline {
     agent {
         label 'windows' // ודא שיש לך agent עם תווית מתאימה
     }
-
+      stages {
         stage('Checkout Code') {
             steps {
                 git url: 'https://github.com/Moshe832/jenkinsfiles.git', branch: 'main'
@@ -63,3 +63,5 @@ pipeline {
             echo 'Pipeline failed!'
         }
     }
+}
+
