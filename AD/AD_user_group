@@ -16,6 +16,7 @@ pipeline {
             steps {
                 powershell '''
                     $jsonPath = "$env:WORKSPACE\\json-users"
+                    echo $jsonPath
                     $json = Get-Content $jsonPath | ConvertFrom-Json
 
                     foreach ($user in $json.users) {
