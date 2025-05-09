@@ -6,21 +6,54 @@ pipeline {
         string(name: 'GroupName', description: 'Group name' , defaultValue: 'admins')
         string(name: 'StartDate', description: 'Start date (yyyy-MM-dd)', defaultValue: '2023-10-01')
     }
-
-    environment {
-        //JSON_PATH = "D:\\$WORKSPACE\\userAccessList"
-        //REPO_DIR = "D:\\$WORKSPACE"
-        JSON_PATH = "C:\\Git\\jenkinsfiles\\userAccessList"
+    options {
+        // Timeout counter starts AFTER agent is allocated
+        timeout(time: 300, unit: 'SECONDS')
     }
-
     stages {
-        stage('Checkout Code') {
+        stage('Append to JSON') {
             steps {
-                script {
-                    powershell '''
-               Get-Content -Path $env:JSON_PATH | Write-Host
-                '''}
+                powershell '''
+                    # Get Jenkins parameters from environment
+                    $userName = $env:UserName
+                    $groupName = $env:GroupName
+                    $startDate = $env:StartDate
+
+                    # Define file path
+                    $jsonFilePath = "users.json"
+
+                    # Load existing JSON array or initialize new array
+                    if (Test-Path $jsonFilePath) {
+                        $existingJson = Get-Content $jsonFilePath -Raw | ConvertFrom-Json
+                    } else {
+                        $existingJson = @()
+                    }
+
+                    # Create new user object
+                    $newUser = [PSCustomObject]@{
+                        UserName  = $userName
+                        GroupName = $groupName
+                        StartDate = $startDate
+                    }
+
+                    # Append to array
+                    $updatedJson = $existingJson + $newUser
+
+                    # Save updated JSON back to file
+                    $updatedJson | ConvertTo-Json -Depth 2 | Out-File -FilePath $jsonFilePath -Encoding UTF8
+
+                    Write-Host "Appended new user to JSON:"
+                    $newUser | ConvertTo-Json -Depth 2
+                '''
             }
         }
     }
+
+    post {
+        always {
+            echo "Pipeline completed."
+        }
+    }
+
 }
+// Compare this snippet from AD/AD_user_group:
