@@ -1,0 +1,26 @@
+pipeline {
+    agent { label 'windows' }
+
+    parameters {
+        string(name: 'UserName', description: 'Username (e.g., john.doe)')
+        string(name: 'GroupName', description: 'Group name')
+        string(name: 'StartDate', description: 'Start date (yyyy-MM-dd)')
+    }
+
+    environment {
+        //JSON_PATH = "D:\\$WORKSPACE\\userAccessList"
+        //REPO_DIR = "D:\\$WORKSPACE"
+        JSON_PATH = 'C:\\node\\workspace\\json-users'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                script {
+                    powershell '''
+               Get-Content -Path $env:JSON_PATH | Write-Host
+                '''}
+            }
+        }
+    }
+}
