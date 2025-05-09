@@ -10,7 +10,7 @@ pipeline {
     environment {
         //JSON_PATH = "D:\\$WORKSPACE\\userAccessList"
         //REPO_DIR = "D:\\$WORKSPACE"
-        JSON_PATH = 'C:\\node\\workspace\\json-users'
+        JSON_PATH = "C:\Git\jenkinsfiles\userAccessList"
     }
 
     stages {
