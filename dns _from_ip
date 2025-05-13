@@ -1,0 +1,16 @@
+$ip = "192.168.1.10"
+$tcpClient = New-Object System.Net.Sockets.TcpClient
+$tcpClient.Connect($ip, 3389)
+
+$sslStream = New-Object System.Net.Security.SslStream($tcpClient.GetStream(), $false, ({ $true }))
+
+try {
+    $sslStream.AuthenticateAsClient($ip)
+    $cert = $sslStream.RemoteCertificate
+    $cert.Subject
+} catch {
+    Write-Host "Could not retrieve certificate: $_"
+} finally {
+    $sslStream.Close()
+    $tcpClient.Close()
+}
