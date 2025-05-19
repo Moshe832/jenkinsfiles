@@ -8,7 +8,6 @@ pipeline {
     }
     environment {
         jsonFilePath = '${env.WORKSPACE}\\userAccessList'
-        //"C:\node\workspace\UpdateJson\userAccessList"
                             echo "The workspace directory is: ${env.WORKSPACE}"
                             echo "The current directory is: ${pwd()}"
                             echo "The JSON file path is: ${env.jsonFilePath}"
