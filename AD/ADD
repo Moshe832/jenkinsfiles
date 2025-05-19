@@ -6,55 +6,64 @@ pipeline {
         string(name: 'GroupName', description: 'Group name' , defaultValue: 'admins')
         string(name: 'StartDate', description: 'Start date (yyyy-MM-dd)', defaultValue: '2023-10-01')
     }
-    environment {
-        jsonFilePath = '${env.WORKSPACE}\\userAccessList'
-                            echo "The workspace directory is: ${env.WORKSPACE}"
-                            echo "The current directory is: ${pwd()}"
-                            echo "The JSON file path is: ${env.jsonFilePath}"
-    }
-    // Define the environment variable for the JSON file path
-    options {
-        // Timeout counter starts AFTER agent is allocated
-        timeout(time: 300, unit: 'SECONDS')
-    }
-    stages {
-        stage('Append to JSON') {
-            steps {
-                powershell '''
-                    # Get Jenkins parameters from environment
-                    $userName = $env:UserName
-                    $groupName = $env:GroupName
-                    $startDate = $env:StartDate
+environment {
+    jsonFilePath = '${env.WORKSPACE}\\userAccessList'
+}
 
-                    # Define file path
-                    $jsonFilePath = "$env:jsonFilePath"
+options {
+    // Timeout counter starts AFTER agent is allocated
+    timeout(time: 300, unit: 'SECONDS')
+}
 
-                    # Load existing JSON array or initialize new array
-                    if (Test-Path $jsonFilePath) {
-                        $existingJson = Get-Content $jsonFilePath -Raw | ConvertFrom-Json
-                    } else {
-                        $existingJson = @()
-                    }
-
-                    # Create new user object
-                    $newUser = [PSCustomObject]@{
-                        UserName  = $userName
-                        GroupName = $groupName
-                        StartDate = $startDate
-                    }
-
-                    # Append to array
-                    $updatedJson = $existingJson + $newUser
-
-                    # Save updated JSON back to file
-                    $updatedJson | ConvertTo-Json -Depth 2 | Out-File -FilePath $jsonFilePath -Encoding UTF8
-
-                    Write-Host "Appended new user to JSON:"
-                    $newUser | ConvertTo-Json -Depth 2
-                '''
+stages {
+    stage('Echo Workspace') {
+        steps {
+            script {
+                // Print workspace using Groovy inside the script block
+                echo "The workspace directory is: ${env.WORKSPACE}"
+                echo "The current directory is: ${pwd()}"
+                echo "The JSON file path is: ${env.jsonFilePath}"
             }
         }
     }
+
+    stage('Append to JSON') {
+        steps {
+            powershell '''
+                # Get Jenkins parameters from environment
+                $userName = $env:UserName
+                $groupName = $env:GroupName
+                $startDate = $env:StartDate
+
+                # Define file path
+                $jsonFilePath = "$env:jsonFilePath"
+
+                # Load existing JSON array or initialize new array
+                if (Test-Path $jsonFilePath) {
+                    $existingJson = Get-Content $jsonFilePath -Raw | ConvertFrom-Json
+                } else {
+                    $existingJson = @()
+                }
+
+                # Create new user object
+                $newUser = [PSCustomObject]@{
+                    UserName  = $userName
+                    GroupName = $groupName
+                    StartDate = $startDate
+                }
+
+                # Append to array
+                $updatedJson = $existingJson + $newUser
+
+                # Save updated JSON back to file
+                $updatedJson | ConvertTo-Json -Depth 2 | Out-File -FilePath $jsonFilePath -Encoding UTF8
+
+                Write-Host "Appended new user to JSON:"
+                $newUser | ConvertTo-Json -Depth 2
+            '''
+        }
+    }
+}
 
     post {
         always {
