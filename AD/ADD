@@ -7,8 +7,11 @@ pipeline {
         string(name: 'StartDate', description: 'Start date (yyyy-MM-dd)', defaultValue: '2023-10-01')
     }
     environment {
-        jsonFilePath = 'C:\\Git\\jenkinsfiles\\userAccessList'
-        
+        jsonFilePath = '${env.WORKSPACE}\\userAccessList'
+        //"C:\node\workspace\UpdateJson\userAccessList"
+                            echo "The workspace directory is: ${env.WORKSPACE}"
+                            echo "The current directory is: ${pwd()}"
+                            echo "The JSON file path is: ${env.jsonFilePath}"
     }
     // Define the environment variable for the JSON file path
     options {
