@@ -70,14 +70,26 @@ stages {
     stage('Upload JSON to Repo') {
         steps {
            withCredentials([usernamePassword(credentialsId: 'e081ec0d-a4eb-42cc-865b-911e79062935', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+
                     powershell '''
                     git config user.name "$env:GIT_USERNAME"
                     git config user.email "$env:GIT_USERNAME@example.com"
-                    # Set remote with credentials embedded in the URL
+                    # Check for changes
+                    git status
+
+                    # If there are changes, add and commit them
+                    git add .
+                    git commit -m "Auto commit for changes" || echo "No changes to commit"
+
+                    # Set remote URL with embedded credentials
                     git remote set-url origin https://$env:GIT_USERNAME:$env:GIT_PASSWORD@github.com/Moshe832/jenkinsfiles.git
                     # Push changes
+                    
+                    # Push changes (if any)
                     git push origin HEAD:main
                     '''
+
+
         }
     }
 }
