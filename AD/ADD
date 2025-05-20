@@ -27,7 +27,7 @@ stages {
                 echo "The workspace directory is: ${env.WORKSPACE}"
                 echo "The current directory is: ${pwd()}"
                 echo "The JSON file path is: ${env.jsonFilePath}"
-              
+                echo "The UpdateJsonTmp file path is: ${env.UpdateJsonTmp}"
             }
         }
     }
