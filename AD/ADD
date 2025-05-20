@@ -81,13 +81,6 @@ stages {
         }
     }
 }
-
-    post {
-        always {
-            echo "Pipeline completed."
-        }
-    }
-
 }
 
 }
