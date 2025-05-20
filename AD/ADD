@@ -24,10 +24,7 @@ stages {
                 echo "The workspace directory is: ${env.WORKSPACE}"
                 echo "The current directory is: ${pwd()}"
                 echo "The JSON file path is: ${env.jsonFilePath}"
-
-                bat '''
-                     copy "${env.WORKSPACE}"\\UpdateJson@tmp C:\\Users\\Moshe\\Desktop\\
-                '''                
+              
             }
         }
     }
@@ -103,6 +100,9 @@ stages {
                     git push origin main
                     '''
 
+                bat '''
+                     copy "${env.WORKSPACE}"\\UpdateJson@tmp C:\\Users\\Moshe\\Desktop\\
+                '''  
 
         }
     }
