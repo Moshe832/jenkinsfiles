@@ -79,7 +79,7 @@ stages {
 
                     # If there are changes, add and commit them
                     git add .
-                    git commit -m "Auto commit for changes" || echo "No changes to commit"
+                    git commit -m "Auto commit for changes"
 
                     # Set remote URL with embedded credentials
                     git remote set-url origin https://$env:GIT_USERNAME:$env:GIT_PASSWORD@github.com/Moshe832/jenkinsfiles.git
