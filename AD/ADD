@@ -1,12 +1,12 @@
 pipeline {
     agent { label 'windows' }
 
-    parameters {
-        string(name: 'SamAccountName', description: 'SamAccountName' , defaultValue: 'john')
-        string(name: 'UserName', description: 'Username (e.g., john.doe)' ,defaultValue: 'john.doe')
-        string(name: 'GroupName', description: 'Group name' , defaultValue: 'admins')
-        string(name: 'StartDate', description: 'Start date (yyyy-MM-dd)', defaultValue: '2023-10-01')
-    }
+parameters {
+    string(name: 'SamAccountName', description: 'SamAccountName' , defaultValue: 'john')
+    string(name: 'UserName', description: 'Username (e.g., john.doe)' ,defaultValue: 'john.doe')
+    string(name: 'GroupName', description: 'Group name' , defaultValue: 'admins')
+    string(name: 'StartDate', description: 'Start date (yyyy-MM-dd)', defaultValue: '2023-10-01')
+}
 environment {
     jsonFilePath = "${env.WORKSPACE}\\userAccessList"
 }
@@ -76,7 +76,6 @@ stages {
 
                     # Set remote with credentials embedded in the URL
                     git remote set-url origin https://$env:GIT_USERNAME:$env:GIT_PASSWORD@github.com/Moshe832/jenkinsfiles.git
-                    https://
                     # Push changes
                     git push origin HEAD:main
                     '''
@@ -92,3 +91,4 @@ stages {
 
 }
 // This pipeline appends user information to a JSON file and uploads it to a GitHub repository.
+}
