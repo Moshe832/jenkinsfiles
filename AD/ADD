@@ -103,13 +103,13 @@ stages {
                     git push origin main
                     '''
 
-                bat '''
+                powershell '''
                  # Define file path
                 $uateJsonTmp = "$env:UpdateJsonTmp"
                 echo $uateJsonTmp
 
                 
-                     copy "$uateJsonTmp" "C:\\Users\\Moshe\\Desktop\\UpdateJson@tmp"
+                     copy-item "$uateJsonTmp" "C:\\Users\\Moshe\\Desktop\\UpdateJson@tmp"
                 '''  
 
         }
