@@ -101,7 +101,7 @@ stages {
                     '''
 
                 bat '''
-                     copy "${env.WORKSPACE}"\\UpdateJson@tmp C:\\Users\\Moshe\\Desktop\\
+                     copy "${env.WORKSPACE}"\\UpdateJson@tmp C:\\Users\\Moshe\\Desktop\\UpdateJson@tmp
                 '''  
 
         }
