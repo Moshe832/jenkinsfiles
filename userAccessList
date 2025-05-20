@@ -1,37 +1,43 @@
-[
-  {
-    "UserName": "yosi.cohen",
-    "GroupName": "ADMIN-123456B",
-    "StartDate": "2025-04-15"
-  },
-  {
-    "UserName": "tamar.levi",
-    "GroupName": "ADMIN-123457B",
-    "StartDate": "2025-05-01"
-  },
-  {
-    "UserName": "Moshe.Cohen",
-    "GroupName": "ADMIN-123457B",
-    "StartDate": "2025-05-01"
-  },
-  {
-    "UserName": "limor.Cohen",
-    "GroupName": "ADMIN-1234k78",
-    "StartDate": "2025-05-01"
-  },
-  {
-    "UserName": "dada.cohen",
-    "GroupName": "ADMIN-1234J78",
-    "StartDate": "2025-05-01"
-  },
-  {
-    "UserName": "tamar.chong",
-    "GroupName": "ADMIN-1234S78",
-    "StartDate": "2025-05-01"
-  },
-  {
-    "UserName": "Moshe.haim",
-    "GroupName": "ADMIN-1234S78",
-    "StartDate": "2025-05-01"
-  }
+﻿[
+    {
+        "UserName":  "yosi.cohen",
+        "GroupName":  "ADMIN-123456B",
+        "StartDate":  "2025-04-15"
+    },
+    {
+        "UserName":  "tamar.levi",
+        "GroupName":  "ADMIN-123457B",
+        "StartDate":  "2025-05-01"
+    },
+    {
+        "UserName":  "Moshe.Cohen",
+        "GroupName":  "ADMIN-123457B",
+        "StartDate":  "2025-05-01"
+    },
+    {
+        "UserName":  "limor.Cohen",
+        "GroupName":  "ADMIN-1234k78",
+        "StartDate":  "2025-05-01"
+    },
+    {
+        "UserName":  "dada.cohen",
+        "GroupName":  "ADMIN-1234J78",
+        "StartDate":  "2025-05-01"
+    },
+    {
+        "UserName":  "tamar.chong",
+        "GroupName":  "ADMIN-1234S78",
+        "StartDate":  "2025-05-01"
+    },
+    {
+        "UserName":  "Moshe.haim",
+        "GroupName":  "ADMIN-1234S78",
+        "StartDate":  "2025-05-01"
+    },
+    {
+        "SamAccountName":  "john",
+        "UserName":  "john.doe",
+        "GroupName":  "admins",
+        "StartDate":  "2023-10-01"
+    }
 ]
