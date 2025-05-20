@@ -73,7 +73,6 @@ stages {
                     powershell '''
                     git config user.name "$env:GIT_USERNAME"
                     git config user.email "$env:GIT_USERNAME@example.com"
-
                     # Set remote with credentials embedded in the URL
                     git remote set-url origin https://$env:GIT_USERNAME:$env:GIT_PASSWORD@github.com/Moshe832/jenkinsfiles.git
                     # Push changes
