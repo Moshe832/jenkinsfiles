@@ -82,7 +82,15 @@ stages {
 
                     # Check if there are changes and commit
                     git add .
-                    git commit -m "Auto commit for changes" \|| echo "No changes to commit"
+                    
+                    # Check if there are any changes to commit
+                    $commitResult = git commit -m "Auto commit for changes" 
+                    if ($commitResult) {
+                        Write-Host "Changes committed"
+                    } else {
+                        Write-Host "No changes to commit"
+                    }
+
 
                     # Set remote URL with embedded credentials
                     git remote set-url origin https://$env:GIT_USERNAME:$env:GIT_PASSWORD@github.com/Moshe832/jenkinsfiles.git
