@@ -9,9 +9,15 @@ pipeline {
     }
     environment {
         jsonFilePath = "${env.WORKSPACE}\\userAccessList"
+<<<<<<< HEAD
         UpdateJsonTmp = "${env.WORKSPACE}\\UpdateJson@tmp"
         date = "${env.StartDate}"
         dateFormat = "yyyy-MM-dd"
+=======
+        UpdateJsonTmp = "${env.WORKSPACE}@tmp"
+
+
+>>>>>>> 589af91d78be3310edd2c6cc2640a5ae34a31816
     }
 
     options {
@@ -108,10 +114,11 @@ stages {
                 powershell '''
                  # Define file path
                 $uateJsonTmp = "$env:UpdateJsonTmp"
-                echo $uateJsonTmp
+                echo "path : $uateJsonTmp"
+
 
                 
-                     copy-item "$uateJsonTmp" "C:\\Users\\Moshe\\Desktop\\UpdateJson@tmp"
+                     copy-item -r "$uateJsonTmp" "C:\\Users\\Moshe\\Desktop\\UpdateJson@tmp"
                 '''  
 
         }
