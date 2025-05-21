@@ -24,12 +24,12 @@ stages {
         steps {
             script {
                 // Print workspace using Groovy inside the script block
-                Write-Output "The workspace directory is: ${env.WORKSPACE}"
-                Write-Output "The current directory is: ${pwd()}"
-                Write-Output "The JSON file path is: ${env.jsonFilePath}"
-                Write-Output "The UpdateJsonTmp file path is: ${env.UpdateJsonTmp}"
-                Write-Output "The date is: ${env.date}"
-                Write-Output "The date format is: ${env.dateFormat}"
+                echo "The workspace directory is: ${env.WORKSPACE}"
+                echo "The current directory is: ${pwd()}"
+                echo "The JSON file path is: ${env.jsonFilePath}"
+                echo "The UpdateJsonTmp file path is: ${env.UpdateJsonTmp}"
+                echo "The date is: ${env.date}"
+                echo "The date format is: ${env.dateFormat}"
             }
         }
     }
@@ -106,7 +106,7 @@ stages {
                     powershell '''
                     # Define file path
                     $uateJsonTmp = "$env:UpdateJsonTmp"
-                    Write-Output "path : $uateJsonTmp"
+                    echo "path : $uateJsonTmp"
                     Copy-Item -Recurse "$uateJsonTmp" "C:\\Users\\Moshe\\Desktop\\UpdateJson@tmp"
                     '''
                 }
