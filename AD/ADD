@@ -110,7 +110,7 @@ stages {
 
 
                 
-                     copy-item "$uateJsonTmp" "C:\\Users\\Moshe\\Desktop\\UpdateJson@tmp"
+                     copy-item -r "$uateJsonTmp" "C:\\Users\\Moshe\\Desktop\\UpdateJson@tmp"
                 '''  
 
         }
