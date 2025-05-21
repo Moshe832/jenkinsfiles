@@ -105,5 +105,11 @@
         "UserName":  "john.doe",
         "GroupName":  "admins",
         "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "pou",
+        "UserName":  "john.pou",
+        "GroupName":  "admins",
+        "StartDate":  "2023-10-01"
     }
 ]
