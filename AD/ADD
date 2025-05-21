@@ -10,8 +10,8 @@ pipeline {
     environment {
         jsonFilePath = "${env.WORKSPACE}\\userAccessList"
         UpdateJsonTmp = "${env.WORKSPACE}\\UpdateJson@tmp"
-
-
+        date = "${env.StartDate}"
+        dateFormat = "yyyy-MM-dd"
     }
 
     options {
@@ -28,6 +28,8 @@ stages {
                 echo "The current directory is: ${pwd()}"
                 echo "The JSON file path is: ${env.jsonFilePath}"
                 echo "The UpdateJsonTmp file path is: ${env.UpdateJsonTmp}"
+                echo "The date is: ${env.date}"
+                echo "The date format is: ${env.dateFormat}"
             }
         }
     }
