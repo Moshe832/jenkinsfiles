@@ -9,7 +9,7 @@ pipeline {
     }
     environment {
         jsonFilePath = "${env.WORKSPACE}\\userAccessList"
-        UpdateJsonTmp = "${env.WORKSPACE}\\UpdateJson@tmp"
+        UpdateJsonTmp = "${env.WORKSPACE}@tmp"
 
 
     }
@@ -106,7 +106,8 @@ stages {
                 powershell '''
                  # Define file path
                 $uateJsonTmp = "$env:UpdateJsonTmp"
-                echo $uateJsonTmp
+                echo "path : $uateJsonTmp"
+
 
                 
                      copy-item "$uateJsonTmp" "C:\\Users\\Moshe\\Desktop\\UpdateJson@tmp"
