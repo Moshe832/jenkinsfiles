@@ -2,9 +2,9 @@ pipeline {
     agent { label 'windows' }
 
     parameters {
-        string(name: 'SamAccountName', description: 'SamAccountName', defaultValue: 'mosh')
-        string(name: 'UserName', description: 'Username (e.g., john.moss)', defaultValue: 'john.moss')
-        string(name: 'GroupNames', description: 'Comma-separated group names', defaultValue: 'admins,aaa,ddda,adad')
+        string(name: 'SamAccountName', description: 'Account name' , defaultValue: 'john')
+        string(name: 'UserName', description: 'Username (e.g., john.doe)' ,defaultValue: 'john.doe')
+        string(name: 'GroupName', description: 'Group name' , defaultValue: 'admins','users';)
         string(name: 'StartDate', description: 'Start date (yyyy-MM-dd)', defaultValue: '2023-10-01')
     }
 
@@ -12,7 +12,7 @@ pipeline {
         jsonFilePath = "${env.WORKSPACE}\\userAccessList.json"
         UpdateJsonTmp = "${env.WORKSPACE}\\UpdateJson@tmp"
         date = "${env.StartDate}"
-        dateFormat = "yyyy-MM-dd"
+        dateFormat = 'yyyy-MM-dd'
     }
 
     options {
@@ -38,39 +38,49 @@ pipeline {
         stage('Append to JSON') {
             steps {
                 powershell '''
-                    # Get Jenkins parameters from environment
-                    $samAccountName = $env:SamAccountName
-                    $userName = $env:UserName
-                    $groupNames = $env:GroupNames.Split(",")  # Split the string by commas to create an array
-                    $startDate = $env:StartDate
+            # Get Jenkins parameters from environment
+            $samAccountName = $env:SamAccountName
+            $userName = $env:UserName
+            $groupNameRaw = $env:GroupName
+            $startDate = $env:StartDate
 
-                    # Define file path
-                    $jsonFilePath = "$env:jsonFilePath"
+            # Convert comma-separated GroupName to array
+            $groupName = $groupNameRaw -split '\\s*,\\s*'
 
-                    # Load existing JSON array or initialize new array
-                    if (Test-Path $jsonFilePath) {
-                        $existingJson = Get-Content $jsonFilePath -Raw | ConvertFrom-Json
-                    } else {
-                        $existingJson = @()
-                    }
+            # Define file path
+            $jsonFilePath = "$env:jsonFilePath"
 
-                    # Create new user object
-                    $newUser = [PSCustomObject]@{
-                        SamAccountName = $samAccountName
-                        UserName  = $userName
-                        GroupNames = $groupNames  # Store the group names as an array
-                        StartDate = $startDate
-                    }
+            # Load existing JSON array or initialize new array
+            if (Test-Path $jsonFilePath) {
+                $existingJsonRaw = Get-Content $jsonFilePath -Raw | ConvertFrom-Json
 
-                    # Append to array
-                    $updatedJson = $existingJson + $newUser
+                # Ensure existingJson is always an array
+                if ($existingJsonRaw -is [System.Collections.IEnumerable]) {
+                    $existingJson = @($existingJsonRaw)
+                } else {
+                    $existingJson = @($existingJsonRaw)
+                }
+            } else {
+                $existingJson = @()
+            }
 
-                    # Save updated JSON back to file
-                    $updatedJson | ConvertTo-Json -Depth 2 | Out-File -FilePath $jsonFilePath -Encoding UTF8
+            # Create new user object
+            $newUser = [PSCustomObject]@{
+                SamAccountName = $samAccountName
+                UserName       = $userName
+                GroupName      = $groupName
+                StartDate      = $startDate
+            }
 
-                    Write-Host "Appended new user to JSON:"
-                    $newUser | ConvertTo-Json -Depth 2
-                '''
+            # Append to array
+            $updatedJson = $existingJson + @($newUser)
+
+            # Save updated JSON back to file
+            $updatedJson | ConvertTo-Json -Depth 3 | Out-File -FilePath $jsonFilePath -Encoding UTF8
+
+            Write-Host "Appended new user to JSON:"
+            $newUser | ConvertTo-Json -Depth 3
+        '''
             }
         }
 
@@ -87,7 +97,7 @@ pipeline {
                             git pull origin main  # Ensure your branch is up-to-date
 
                             # Check if there are changes and commit
-                            git add .                    
+                            git add .
                             $commitResult = git commit -m "Auto commit for changes"
                             if ($LASTEXITCODE -eq 0) {
                                 Write-Host "Changes committed"
