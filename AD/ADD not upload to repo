@@ -11,7 +11,7 @@ pipeline {
         jsonFilePath = "${env.WORKSPACE}\\userAccessListtemplate.json"
         UpdateJsonTmp = "${env.WORKSPACE}\\UpdateJson@tmp"
         date = "${env.StartDate}"
-        dateFormat = "yyyy-MM-dd"
+        dateFormat = 'yyyy-MM-dd'
     }
 
     options {
@@ -19,60 +19,62 @@ pipeline {
         timeout(time: 300, unit: 'SECONDS')
     }
 
-stages {
-    stage('Echo Workspace') {
-        steps {
-            script {
-                // Print workspace using Groovy inside the script block
-                echo "The workspace directory is: ${env.WORKSPACE}"
-                echo "The current directory is: ${pwd()}"
-                echo "The JSON file path is: ${env.jsonFilePath}"
-                echo "The UpdateJsonTmp file path is: ${env.UpdateJsonTmp}"
-                echo "The date is: ${env.date}"
-                echo "The date format is: ${env.dateFormat}"
+    stages {
+        stage('Echo Workspace') {
+            steps {
+                script {
+                    // Print workspace using Groovy inside the script block
+                    echo "The workspace directory is: ${env.WORKSPACE}"
+                    echo "The current directory is: ${pwd()}"
+                    echo "The JSON file path is: ${env.jsonFilePath}"
+                    echo "The UpdateJsonTmp file path is: ${env.UpdateJsonTmp}"
+                    echo "The date is: ${env.date}"
+                    echo "The date format is: ${env.dateFormat}"
+                }
+            }
+        }
+
+        stage('Append to JSON') {
+            steps {
+                powershell '''
+            # Get Jenkins parameters from environment
+            $samAccountName = $env:SamAccountName
+            $userName = $env:UserName
+            $groupNameRaw = $env:GroupName
+            $startDate = $env:StartDate
+
+            # Convert comma-separated GroupName to array
+            $groupName = $groupNameRaw -split '\\s*,\\s*'
+
+            # Define file path
+            $jsonFilePath = "$env:jsonFilePath"
+
+            # Load existing JSON array or initialize new array
+            if (Test-Path $jsonFilePath) {
+                $existingJson = Get-Content $jsonFilePath -Raw | ConvertFrom-Json
+            } else {
+                $existingJson = @()
+            }
+
+            # Create new user object
+            $newUser = [PSCustomObject]@{
+                SamAccountName = $samAccountName
+                UserName       = $userName
+                GroupName      = $groupName
+                StartDate      = $startDate
+            }
+
+            # Append to array
+            $updatedJson = $existingJson + $newUser
+
+            # Save updated JSON back to file
+            $updatedJson | ConvertTo-Json -Depth 3 | Out-File -FilePath $jsonFilePath -Encoding UTF8
+
+            Write-Host "Appended new user to JSON:"
+            $newUser | ConvertTo-Json -Depth 3
+        '''
             }
         }
     }
-
-    stage('Append to JSON') {
-        steps {
-            powershell '''
-                # Get Jenkins parameters from environment
-                $samAccountName = $env:SamAccountName
-                $userName = $env:UserName
-                $groupName = $env:GroupName
-                $startDate = $env:StartDate
-
-                # Define file path
-                $jsonFilePath = "$env:jsonFilePath"
-
-                # Load existing JSON array or initialize new array
-                if (Test-Path $jsonFilePath) {
-                    $existingJson = Get-Content $jsonFilePath -Raw | ConvertFrom-Json
-                } else {
-                    $existingJson = @()
-                }
-
-                # Create new user object
-                $newUser = [PSCustomObject]@{
-                    SamAccountName = $samAccountName
-                    UserName  = $userName
-                    GroupName = $groupName
-                    StartDate = $startDate
-                }
-
-                # Append to array
-                $updatedJson = $existingJson + $newUser
-
-                # Save updated JSON back to file
-                $updatedJson | ConvertTo-Json -Depth 2 | Out-File -FilePath $jsonFilePath -Encoding UTF8
-
-                Write-Host "Appended new user to JSON:"
-                $newUser | ConvertTo-Json -Depth 2
-
-            '''
-        }
-    }
-}
 }
 
