@@ -57,7 +57,7 @@ stages {
                 $newUser = [PSCustomObject]@{
                     SamAccountName = $samAccountName
                     UserName  = $userName
-                    GroupName = $groupName
+                    GroupName = [$groupName]
                     StartDate = $startDate
                 }
 
