@@ -2,117 +2,115 @@ pipeline {
     agent { label 'windows' }
 
     parameters {
-        string(name: 'SamAccountName', description: 'SamAccountName' , defaultValue: 'john')
-        string(name: 'UserName', description: 'Username (e.g., john.doe)' ,defaultValue: 'john.doe')
-        string(name: 'GroupName', description: 'Group name' , defaultValue: 'admins')
+        string(name: 'SamAccountName', description: 'SamAccountName', defaultValue: 'mosh')
+        string(name: 'UserName', description: 'Username (e.g., john.moss)', defaultValue: 'john.moss')
+        string(name: 'GroupNames', description: 'Comma-separated group names', defaultValue: 'admins,aaa,ddda,adad')
         string(name: 'StartDate', description: 'Start date (yyyy-MM-dd)', defaultValue: '2023-10-01')
     }
+
     environment {
-        jsonFilePath = "${env.WORKSPACE}\\userAccessList"
+        jsonFilePath = "${env.WORKSPACE}\\userAccessList.json"
         UpdateJsonTmp = "${env.WORKSPACE}\\UpdateJson@tmp"
         date = "${env.StartDate}"
         dateFormat = "yyyy-MM-dd"
     }
 
     options {
-        // Timeout counter starts AFTER agent is allocated
         timeout(time: 300, unit: 'SECONDS')
     }
 
-stages {
-    stage('Echo Workspace') {
-        steps {
-            script {
-                // Print workspace using Groovy inside the script block
-                echo "The workspace directory is: ${env.WORKSPACE}"
-                echo "The current directory is: ${pwd()}"
-                echo "The JSON file path is: ${env.jsonFilePath}"
-                echo "The UpdateJsonTmp file path is: ${env.UpdateJsonTmp}"
-                echo "The date is: ${env.date}"
-                echo "The date format is: ${env.dateFormat}"
+    stages {
+        stage('Echo Workspace') {
+            steps {
+                script {
+                    // Print workspace using Groovy inside the script block
+                    echo "The workspace directory is: ${env.WORKSPACE}"
+                    echo "The current directory is: ${pwd()}"
+                    echo "The JSON file path is: ${env.jsonFilePath}"
+                    echo "The UpdateJsonTmp file path is: ${env.UpdateJsonTmp}"
+                    echo "The date is: ${env.date}"
+                    echo "The date format is: ${env.dateFormat}"
+                    echo "Group Names: ${env.GroupNames}"
+                }
             }
         }
-    }
 
-    stage('Append to JSON') {
-        steps {
-            powershell '''
-                # Get Jenkins parameters from environment
-                $samAccountName = $env:SamAccountName
-                $userName = $env:UserName
-                $groupName = $env:GroupName
-                $startDate = $env:StartDate
+        stage('Append to JSON') {
+            steps {
+                powershell '''
+                    # Get Jenkins parameters from environment
+                    $samAccountName = $env:SamAccountName
+                    $userName = $env:UserName
+                    $groupNames = $env:GroupNames.Split(",")  # Split the string by commas to create an array
+                    $startDate = $env:StartDate
 
-                # Define file path
-                $jsonFilePath = "$env:jsonFilePath"
+                    # Define file path
+                    $jsonFilePath = "$env:jsonFilePath"
 
-                # Load existing JSON array or initialize new array
-                if (Test-Path $jsonFilePath) {
-                    $existingJson = Get-Content $jsonFilePath -Raw | ConvertFrom-Json
-                } else {
-                    $existingJson = @()
-                }
-
-                # Create new user object
-                $newUser = [PSCustomObject]@{
-                    SamAccountName = $samAccountName
-                    UserName  = $userName
-                    GroupName = $groupName
-                    StartDate = $startDate
-                }
-
-                # Append to array
-                $updatedJson = $existingJson + $newUser
-
-                # Save updated JSON back to file
-                $updatedJson | ConvertTo-Json -Depth 2 | Out-File -FilePath $jsonFilePath -Encoding UTF8
-
-                Write-Host "Appended new user to JSON:"
-                $newUser | ConvertTo-Json -Depth 2
-            '''
-        }
-    }
-
-    stage('Upload JSON to Repo') {
-        steps {
-           withCredentials([usernamePassword(credentialsId: 'e081ec0d-a4eb-42cc-865b-911e79062935', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                steps {
-                    powershell '''
-                    git config user.name "$env:GIT_USERNAME"
-                    git config user.email "$env:GIT_USERNAME@example.com"
-
-                    # Ensure we are on the correct branch (main or your target branch)
-                    git checkout main
-                    git pull origin main  # Ensure your branch is up-to-date
-
-                    # Check if there are changes and commit
-                    git add .
-                    
-                    # Check if there are any changes to commit
-                    $commitResult = git commit -m "Auto commit for changes"
-                    if ($LASTEXITCODE -eq 0) {
-                        Write-Host "Changes committed"
+                    # Load existing JSON array or initialize new array
+                    if (Test-Path $jsonFilePath) {
+                        $existingJson = Get-Content $jsonFilePath -Raw | ConvertFrom-Json
                     } else {
-                        Write-Host "No changes to commit"
+                        $existingJson = @()
                     }
 
-                    # Set remote URL with embedded credentials
-                    git remote set-url origin https://$env:GIT_USERNAME:$env:GIT_PASSWORD@github.com/Moshe832/jenkinsfiles.git
-                                        
-                    # Push changes
-                    git push origin main
-                    '''
+                    # Create new user object
+                    $newUser = [PSCustomObject]@{
+                        SamAccountName = $samAccountName
+                        UserName  = $userName
+                        GroupNames = $groupNames  # Store the group names as an array
+                        StartDate = $startDate
+                    }
 
-                    powershell '''
-                    # Define file path
-                    $uateJsonTmp = "$env:UpdateJsonTmp"
-                    echo "path : $uateJsonTmp"
-                    Copy-Item -Recurse "$uateJsonTmp" "C:\\Users\\Moshe\\Desktop\\UpdateJson@tmp"
-                    '''
+                    # Append to array
+                    $updatedJson = $existingJson + $newUser
+
+                    # Save updated JSON back to file
+                    $updatedJson | ConvertTo-Json -Depth 2 | Out-File -FilePath $jsonFilePath -Encoding UTF8
+
+                    Write-Host "Appended new user to JSON:"
+                    $newUser | ConvertTo-Json -Depth 2
+                '''
+            }
+        }
+
+        stage('Upload JSON to Repo') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'e081ec0d-a4eb-42cc-865b-911e79062935', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                    steps {
+                        powershell '''
+                            git config user.name "$env:GIT_USERNAME"
+                            git config user.email "$env:GIT_USERNAME@example.com"
+
+                            # Ensure we are on the correct branch (main or your target branch)
+                            git checkout main
+                            git pull origin main  # Ensure your branch is up-to-date
+
+                            # Check if there are changes and commit
+                            git add .                    
+                            $commitResult = git commit -m "Auto commit for changes"
+                            if ($LASTEXITCODE -eq 0) {
+                                Write-Host "Changes committed"
+                            } else {
+                                Write-Host "No changes to commit"
+                            }
+
+                            # Set remote URL with embedded credentials
+                            git remote set-url origin https://$env:GIT_USERNAME:$env:GIT_PASSWORD@github.com/Moshe832/jenkinsfiles.git
+
+                            # Push changes
+                            git push origin main
+                        '''
+
+                        powershell '''
+                            # Define file path
+                            $uateJsonTmp = "$env:UpdateJsonTmp"
+                            echo "path : $uateJsonTmp"
+                            Copy-Item -Recurse "$uateJsonTmp" "C:\\Users\\Moshe\\Desktop\\UpdateJson@tmp"
+                        '''
+                    }
                 }
             }
+        }
     }
-}
-}
-
 }
