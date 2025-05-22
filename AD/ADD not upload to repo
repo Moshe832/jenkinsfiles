@@ -1,8 +1,9 @@
+@CompileDynamic
 pipeline {
     agent { label 'windows' }
 
     parameters {
-        string(name: 'SamAccountName', description: 'SamAccountName' , defaultValue: 'john')
+        string(name: 'SamAccountName', description: 'Account name' , defaultValue: 'john')
         string(name: 'UserName', description: 'Username (e.g., john.doe)' ,defaultValue: 'john.doe')
         string(name: 'GroupName', description: 'Group name' , defaultValue: 'admins')
         string(name: 'StartDate', description: 'Start date (yyyy-MM-dd)', defaultValue: '2023-10-01')
@@ -37,42 +38,49 @@ pipeline {
         stage('Append to JSON') {
             steps {
                 powershell '''
-            # Get Jenkins parameters from environment
-            $samAccountName = $env:SamAccountName
-            $userName = $env:UserName
-            $groupNameRaw = $env:GroupName
-            $startDate = $env:StartDate
+                    # Get Jenkins parameters from environment
+                    $samAccountName = $env:SamAccountName
+                    $userName = $env:UserName
+                    $groupNameRaw = $env:GroupName
+                    $startDate = $env:StartDate
 
-            # Convert comma-separated GroupName to array
-            $groupName = $groupNameRaw -split '\\s*,\\s*'
+                    # Convert comma-separated GroupName to array
+                    $groupName = $groupNameRaw -split '\\s*,\\s*'
 
-            # Define file path
-            $jsonFilePath = "$env:jsonFilePath"
+                    # Define file path
+                    $jsonFilePath = "$env:jsonFilePath"
 
-            # Load existing JSON array or initialize new array
-            if (Test-Path $jsonFilePath) {
-                $existingJson = Get-Content $jsonFilePath -Raw | ConvertFrom-Json
-            } else {
-                $existingJson = @()
-            }
+                    # Load existing JSON array or initialize new array
+                    if (Test-Path $jsonFilePath) {
+                        $existingJsonRaw = Get-Content $jsonFilePath -Raw | ConvertFrom-Json
 
-            # Create new user object
-            $newUser = [PSCustomObject]@{
-                SamAccountName = $samAccountName
-                UserName       = $userName
-                GroupName      = $groupName
-                StartDate      = $startDate
-            }
+                        # Ensure existingJson is always an array
+                        if ($existingJsonRaw -is [System.Collections.IEnumerable]) {
+                            $existingJson = @($existingJsonRaw)
+                        } else {
+                            $existingJson = @($existingJsonRaw)
+                        }
+                    } else {
+                        $existingJson = @()
+                    }
 
-            # Append to array
-            $updatedJson = $existingJson + $newUser
+                    # Create new user object
+                    $newUser = [PSCustomObject]@{
+                        SamAccountName = $samAccountName
+                        UserName       = $userName
+                        GroupName      = $groupName
+                        StartDate      = $startDate
+                    }
 
-            # Save updated JSON back to file
-            $updatedJson | ConvertTo-Json -Depth 3 | Out-File -FilePath $jsonFilePath -Encoding UTF8
+                    # Append to array
+                    $updatedJson = $existingJson + @($newUser)
 
-            Write-Host "Appended new user to JSON:"
-            $newUser | ConvertTo-Json -Depth 3
-        '''
+                    # Save updated JSON back to file
+                    $updatedJson | ConvertTo-Json -Depth 3 | Out-File -FilePath $jsonFilePath -Encoding UTF8
+
+                    Write-Host "Appended new user to JSON:"
+                    $newUser | ConvertTo-Json -Depth 3
+                '''
             }
         }
     }
