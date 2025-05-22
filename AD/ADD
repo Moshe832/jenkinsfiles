@@ -4,7 +4,7 @@ pipeline {
     parameters {
         string(name: 'SamAccountName', description: 'Account name' , defaultValue: 'john')
         string(name: 'UserName', description: 'Username (e.g., john.doe)' ,defaultValue: 'john.doe')
-        string(name: 'GroupName', description: 'Group name' , defaultValue: 'admins,users';)
+        string(name: 'GroupName', description: 'Group name' , defaultValue: 'admins,users')
         string(name: 'StartDate', description: 'Start date (yyyy-MM-dd)', defaultValue: '2023-10-01')
     }
 
