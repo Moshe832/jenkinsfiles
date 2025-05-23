@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // Define the name of the JSON file expected in the Jenkins workspace
-        JSON_FILE = "users.json"
+        JSON_FILE_PATH = "$WORKSPACE\\userAccessList.json"
     }
 
     stages {
@@ -12,7 +12,7 @@ pipeline {
                 // Run PowerShell commands inside this step
                 powershell '''
                 # Set path to the JSON file in the Jenkins workspace
-                $jsonPath = "$env:WORKSPACE\\$env:JSON_FILE"
+                $jsonPath = "$env:JSON_FILE_PATH"
 
                 # Read the content of the JSON file and convert it to an array of PowerShell objects
                 $users = Get-Content $jsonPath | ConvertFrom-Json
