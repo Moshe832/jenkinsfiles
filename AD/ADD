@@ -9,6 +9,9 @@ pipeline {
     }
 
     environment {
+        GIT_USER = 'moshe.cohen'
+        GIT_EMAIL = 'moshe@example.com'
+        GIT_CREDENTIALS_ID = 'e081ec0d-a4eb-42cc-865b-911e79062935'  // stored Jenkins credentials
         jsonFilePath = "${env.WORKSPACE}\\userAccessList.json"
         UpdateJsonTmp = "${env.WORKSPACE}@tmp"
         date = "${env.StartDate}"
@@ -89,29 +92,19 @@ pipeline {
 
         stage('Upload JSON to Repo') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'e081ec0d-a4eb-42cc-865b-911e79062935', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                    powershell '''
-                        git config user.name "$env:GIT_USERNAME"
-                        git config user.email "$env:GIT_USERNAME@example.com"
-
-                        
-                        git checkout main
-                        git pull origin main  
-
-                        
-                        git add .
-                        git commit -m "${env:StartDate} commit for changes"
+                 {
+                withCredentials([usernamePassword(credentialsId: env.GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                    bat """
+                        git config user.name "%GIT_USER%"
+                        git config user.email "%GIT_EMAIL%"
+                        git add log.txt
+                        git commit -m "Appended log at %DATE% %TIME%" || echo No changes to commit
+                        git remote set-url origin https://%GIT_USERNAME%:%GIT_PASSWORD%@github.com/Moshe832/jenkinsfiles.git
                         git push origin main
-
-                        git status  # Check the current status
-                    '''
+                    """
                 }
             }
         }
-        stage('Clean Workspace') {
-            steps {
-                deleteDir()  // This deletes everything in the workspace
-            }
-        }
+
     }
 }
