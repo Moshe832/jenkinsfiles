@@ -37,11 +37,7 @@ pipeline {
             }
         }
 
-            stage('Clean Workspace') {
-        steps {
-            deleteDir()  // This deletes everything in the workspace
-        }
-    }
+
         stage('Append to JSON') {
             steps {
                 powershell '''
@@ -109,9 +105,10 @@ pipeline {
                 '''
             }
         }
-
-
-
-
+        stage('Clean Workspace') {
+            steps {
+                deleteDir()  // This deletes everything in the workspace
+            }
+        }
     }
 }
