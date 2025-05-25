@@ -112,7 +112,7 @@ pipeline {
         Write-Host "Using password: \$password"
         git config user.name "\$username"
         git config user.email "Moshe832@gmail.com"
-        \$url = "https://\$username:\$password@github.com/Moshe832/jenkinsfiles.git"
+        \$url = "https://\${username}:\${password}@github.com/Moshe832/jenkinsfiles.git"
         git remote set-url origin \$url
 
         git checkout main
