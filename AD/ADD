@@ -94,15 +94,18 @@ pipeline {
         stage('Upload JSON to Repo') {
             steps {
                  
-                withCredentials([usernamePassword(credentialsId: "${env.GIT_CREDENTIALS_ID}", usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                    bat """
-                        git config user.name "%GIT_USER%"
-                        git config user.email "%GIT_EMAIL%"
-                        git add log.txt
-                        git commit -m "Appended log at %DATE% %TIME%" || echo No changes to commit
+                withCredentials([usernamePassword(credentialsId:$"{env.GIT_CREDENTIALS_ID}", usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                                    bat """
+                   
+                        git config user.name "Moshe832"
+                        git config user.email "Moshe832@gmail.com"
                         git remote set-url origin https://%GIT_USERNAME%:%GIT_PASSWORD%@github.com/Moshe832/jenkinsfiles.git
+                        git add log.txt
+                        git commit -m "Updated log"
                         git push origin main
                     """
+                }
+                    
                 }
             }
         }
