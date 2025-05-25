@@ -1,1 +1,9 @@
-﻿
+﻿ [   
+    {
+        "SamAccountName":  "mosh",
+        "UserName":  "john.moss",
+        "GroupName":  "admins,aaa,ddda,adad",
+        "StartDate":  "2023-10-01"
+    }
+]
+
