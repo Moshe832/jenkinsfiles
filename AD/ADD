@@ -19,6 +19,8 @@ pipeline {
         timeout(time: 300, unit: 'SECONDS')
     }
 
+
+
     stages {
         stage('Echo Workspace') {
             steps {
@@ -35,6 +37,11 @@ pipeline {
             }
         }
 
+            stage('Clean Workspace') {
+        steps {
+            deleteDir()  // This deletes everything in the workspace
+        }
+    }
         stage('Append to JSON') {
             steps {
                 powershell '''
@@ -92,14 +99,14 @@ pipeline {
             git checkout main
             git pull origin main  # Make sure it's up-to-date
 
-            # Stage, commit, and push changes
-            git add .
-            git commit -m "${env.date} commit for changes"
-            git push origin main
+                # Stage, commit, and push changes
+                git add .
+                git commit -m "${env.date} commit for changes"
+                git push origin main
 
-            git status  # Check the current status
+                git status  # Check the current status
 
-            '''
+                '''
             }
         }
 
