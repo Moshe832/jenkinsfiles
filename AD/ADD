@@ -90,6 +90,11 @@ pipeline {
         stage('Upload JSON to Repo') {
             steps {
                 powershell '''
+            withCredentials([usernamePassword(credentialsId: 'e081ec0d-a4eb-42cc-865b-911e79062935', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                    powershell '''
+                        git config user.name "$env:GIT_USERNAME"
+                        git config user.email "$env:GIT_USERNAME@example.com"
+
                        
             # Ensure we are on the 'main' branch
             git checkout main
