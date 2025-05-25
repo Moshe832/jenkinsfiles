@@ -105,7 +105,7 @@ pipeline {
 
                 withCredentials([usernamePassword(credentialsId:"${env.GIT_CREDENTIALS_ID}", usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
     powershell """
-    \$username = \$env:GIT_USERNAME
+    \$username = moshe832
     \$password = \$env:GIT_PASSWORD
     \$url = "https://\${username}:\${password}@github.com/Moshe832/jenkinsfiles.git"
     Write-Host "Pushing to: \$url"
