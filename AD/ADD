@@ -108,6 +108,8 @@ pipeline {
     \$username = \$env:GIT_USERNAME
     \$password = \$env:GIT_PASSWORD
     \$url = "https://\${username}:\${password}@github.com/Moshe832/jenkinsfiles.git"
+    Write-Host "Pushing to: \$url"
+
 
     git config user.name "\$username"
     git config user.email "Moshe832@gmail.com"
