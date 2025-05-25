@@ -43,5 +43,15 @@
                           "users"
                       ],
         "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "yotam",
+        "UserName":  "john.doe",
+        "GroupName":  [
+                          "admins",
+                          "users",
+                          "gay"
+                      ],
+        "StartDate":  "2023-10-01"
     }
 ]
