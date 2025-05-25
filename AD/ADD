@@ -111,7 +111,12 @@ pipeline {
 
         if (Test-Path "$env:jsonFile") {
             git add "$env:jsonFile"
-            git commit -m "Updated $env:jsonFile" || echo "No changes to commit"
+
+            git commit -m "Updated $env:jsonFile"
+            if (\$LASTEXITCODE -ne 0) {
+                Write-Host "No changes to commit"
+            }
+
             git push origin main
         } else {
             Write-Host "File $env:jsonFile does not exist."
