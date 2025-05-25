@@ -96,24 +96,32 @@ pipeline {
         stage('Upload JSON to Repo') {
             steps {
                  
-                withCredentials([usernamePassword(credentialsId:"${env.GIT_CREDENTIALS_ID}", usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                                  
-                   
-        bat """
-        set JSON_FILE=${env.jsonFile}
-        git config user.name "%GIT_USERNAME%"
-        git config user.email "Moshe832@gmail.com"
-        git remote set-url origin https://%GIT_USERNAME%:%GIT_PASSWORD%@github.com/Moshe832/jenkinsfiles.git
+                script {
+                    echo "Uploading JSON file to GitHub repository"
+                    echo "Using GIT_CREDENTIALS_ID: ${env.GIT_CREDENTIALS_ID}"
+                    echo "JSON file path: ${env.jsonFilePath}"
+                    echo "JSON file name: ${env.jsonFile}"
+        
 
-        IF EXIST "%JSON_FILE%" (
-            git add "%JSON_FILE%"
-            git commit -m "Updated %JSON_FILE%" || echo No changes to commit
+                withCredentials([usernamePassword(credentialsId:"${env.GIT_CREDENTIALS_ID}", usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+    powershell """
+        git config user.name "$env:GIT_USERNAME"
+        git config user.email "Moshe832@gmail.com"
+        git remote set-url origin https://$env:GIT_USERNAME:$env:GIT_PASSWORD@github.com/Moshe832/jenkinsfiles.git
+
+        if (Test-Path "$env:jsonFile") {
+            git add "$env:jsonFile"
+            git commit -m "Updated $env:jsonFile" || echo "No changes to commit"
             git push origin main
-        ) ELSE (
-            echo File %JSON_FILE% does not exist.
-            exit /b 1
-        )
-        """
+        } else {
+            Write-Host "File $env:jsonFile does not exist."
+            exit 1
+        }
+    """
+}
+
+
+
                 }
                     
                 }
