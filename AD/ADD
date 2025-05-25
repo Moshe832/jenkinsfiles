@@ -108,7 +108,8 @@ pipeline {
         \$username = "moshe832"
         \$password = \$env:GIT_PASSWORD
         \$jsonFile = \$env:jsonFile
-
+        wirte-host "Using username: \$username"
+        Write-Host "Using password: \$password"
         git config user.name "\$username"
         git config user.email "Moshe832@gmail.com"
         \$url = "https://\$username:\$password@github.com/Moshe832/jenkinsfiles.git"
