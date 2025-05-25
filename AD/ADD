@@ -89,25 +89,23 @@ pipeline {
 
         stage('Upload JSON to Repo') {
             steps {
-                powershell '''
-            withCredentials([usernamePassword(credentialsId: 'e081ec0d-a4eb-42cc-865b-911e79062935', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'e081ec0d-a4eb-42cc-865b-911e79062935', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                     powershell '''
                         git config user.name "$env:GIT_USERNAME"
                         git config user.email "$env:GIT_USERNAME@example.com"
 
-                       
-            # Ensure we are on the 'main' branch
-            git checkout main
-            git pull origin main  # Make sure it's up-to-date
+                        
+                        git checkout main
+                        git pull origin main  
 
-                # Stage, commit, and push changes
-                git add .
-                git commit -m "${env.date} commit for changes"
-                git push origin main
+                        
+                        git add .
+                        git commit -m "${env:StartDate} commit for changes"
+                        git push origin main
 
-                git status  # Check the current status
-
-                '''
+                        git status  # Check the current status
+                    '''
+                }
             }
         }
         stage('Clean Workspace') {
