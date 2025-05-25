@@ -87,7 +87,7 @@ pipeline {
         stage('Upload JSON to Repo') {
             steps {
                 powershell '''
-                        git init
+                       
                         git add .
                         git commit -m "${env.date} commit for changes"
                         git push origin main
