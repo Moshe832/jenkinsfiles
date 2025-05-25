@@ -105,6 +105,7 @@ pipeline {
 
                 withCredentials([usernamePassword(credentialsId:"${env.GIT_CREDENTIALS_ID}", usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
     powershell """
+       cd '${env.WORKSPACE}'
         \$username = "moshe832"
         \$password = \$env:GIT_PASSWORD
         \$jsonFile = \$env:jsonFile
@@ -114,7 +115,11 @@ pipeline {
         \$url = "https://\${username}:\${password}@github.com/Moshe832/jenkinsfiles.git"
         git remote set-url origin \$url
 
+        git stash
         git checkout main
+        git stash pop
+
+        # משוך שינויים לפני שאתה דוחף
         git pull origin main --rebase
 
         if (Test-Path "\$jsonFile") {
