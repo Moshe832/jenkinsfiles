@@ -114,14 +114,12 @@ pipeline {
         git config user.email "Moshe832@gmail.com"
         \$url = "https://\${username}:\${password}@github.com/Moshe832/jenkinsfiles.git"
         git remote set-url origin \$url
+git checkout main
 
-        git stash
-        git checkout main
-        git stash pop
+# Pull latest from remote
+git pull origin main
 
-        # משוך שינויים לפני שאתה דוחף
-        git pull origin main --rebase
-
+     
         if (Test-Path "\$jsonFile") {
             git add "\$jsonFile"
             git commit -m "Updated \$jsonFile"
