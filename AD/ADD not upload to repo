@@ -9,7 +9,7 @@ pipeline {
     }
     environment {
         jsonFilePath = "${env.WORKSPACE}\\userAccessListtemplate.json"
-        UpdateJsonTmp = "${env.WORKSPACE}\\UpdateJson@tmp"
+        UpdateJsonTmp = "${env.WORKSPACE}\\@tmp"
         date = "${env.StartDate}"
         dateFormat = 'yyyy-MM-dd'
     }
