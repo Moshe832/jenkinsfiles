@@ -36,6 +36,7 @@ pipeline {
                     echo "The date is: ${env.date}"
                     echo "The date format is: ${env.dateFormat}"
                     echo "Group Names: ${env.GroupNames}"
+                    echo "GIT_CREDENTIALS_ID is: ${env.GIT_CREDENTIALS_ID}"
                 }
             }
         }
@@ -93,7 +94,7 @@ pipeline {
         stage('Upload JSON to Repo') {
             steps {
                  
-                withCredentials([usernamePassword(credentialsId: env.GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId:${env.GIT_CREDENTIALS_ID}, usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                     bat """
                         git config user.name "%GIT_USER%"
                         git config user.email "%GIT_EMAIL%"
