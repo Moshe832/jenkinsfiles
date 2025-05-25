@@ -105,23 +105,27 @@ pipeline {
 
                 withCredentials([usernamePassword(credentialsId:"${env.GIT_CREDENTIALS_ID}", usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
     powershell """
-        git config user.name "$env:GIT_USERNAME"
-        git config user.email "Moshe832@gmail.com"
-        git remote set-url origin https://$env:GIT_USERNAME:$env:GIT_PASSWORD@github.com/Moshe832/jenkinsfiles.git
+    \$username = \$env:GIT_USERNAME
+    \$password = \$env:GIT_PASSWORD
+    \$url = "https://\${username}:\${password}@github.com/Moshe832/jenkinsfiles.git"
 
-        if (Test-Path "${env:jsonFile}") {
-            git add "${env:jsonFile}"
+    git config user.name "\$username"
+    git config user.email "Moshe832@gmail.com"
+    git remote set-url origin \$url
 
-            git commit -m "Updated ${env:jsonFile}"
-            if (\$LASTEXITCODE -ne 0) {
-                Write-Host "No changes to commit"
-            }
+    if (Test-Path "\$env:jsonFile") {
+        git add "\$env:jsonFile"
 
-            git push origin main
-        } else {
-            Write-Host "File ${env:jsonFile} does not exist."
-            exit 1
+        git commit -m "Updated \$env:jsonFile"
+        if (\$LASTEXITCODE -ne 0) {
+            Write-Host "No changes to commit"
         }
+
+        git push origin main
+    } else {
+        Write-Host "File \$env:jsonFile does not exist."
+        exit 1
+    }
     """
 }
 
