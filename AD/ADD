@@ -94,7 +94,7 @@ pipeline {
         stage('Upload JSON to Repo') {
             steps {
                  
-                withCredentials([usernamePassword(credentialsId:$"{env.GIT_CREDENTIALS_ID}", usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId:"${env.GIT_CREDENTIALS_ID}", usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                                     bat """
                    
                         git config user.name "Moshe832"
@@ -111,4 +111,20 @@ pipeline {
         }
 
     }
-}
+    post {
+        always {
+            script {
+                echo "Pipeline completed. Cleaning up workspace."
+            }
+        }
+        success {
+            script {
+                echo "Pipeline succeeded."
+            }
+        }
+        failure {
+            script {
+                echo "Pipeline failed."
+            }
+        }
+    }
