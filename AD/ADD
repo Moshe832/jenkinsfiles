@@ -88,11 +88,18 @@ pipeline {
             steps {
                 powershell '''
                        
-                        git add .
-                        git commit -m "${env.date} commit for changes"
-                        git push origin main
-                        git status
-                        '''
+            # Ensure we are on the 'main' branch
+            git checkout main
+            git pull origin main  # Make sure it's up-to-date
+
+            # Stage, commit, and push changes
+            git add .
+            git commit -m "${env.date} commit for changes"
+            git push origin main
+
+            git status  # Check the current status
+
+            '''
             }
         }
 
