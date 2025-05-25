@@ -88,11 +88,9 @@ pipeline {
             steps {
                 powershell '''
                         git init
-                        git remote add origin https://github.com/Moshe832/jenkinsfiles.git
                         git add .
                         git commit -m "${env.date} commit for changes"
                         git push origin main
-                        git remote add origin
                         git status
                         '''
             }
