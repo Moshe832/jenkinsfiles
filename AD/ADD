@@ -114,7 +114,7 @@ pipeline {
     git config user.name "\$username"
     git config user.email "Moshe832@gmail.com"
     git remote set-url origin \$url
-
+    git pull origin main
     if (Test-Path "\$env:jsonFile") {
         git add "\$env:jsonFile"
 
