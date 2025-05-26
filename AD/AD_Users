@@ -2,10 +2,10 @@ pipeline {
     agent { label 'windows' }
 
     parameters {
-        string(name: 'SamAccountName', description: 'Account name', defaultValue: 'john')
-        string(name: 'UserName', description: 'Username (e.g., john.doe)', defaultValue: 'john.doe')
+        string(name: 'SamAccountName', description: 'Account name', defaultValue: 'Bob')
+        string(name: 'UserName', description: 'Username (e.g., john.doe)', defaultValue: 'Bob.Jones')
         string(name: 'GroupName', description: 'Group name', defaultValue: 'admin-server1,admin-server2')
-        string(name: 'StartDate', description: 'Start date (yyyy-MM-dd)', defaultValue: '2023-10-01')
+        string(name: 'StartDate', description: 'Start date (yyyy-MM-dd)', defaultValue: '2025-05-26')
     }
 
     environment {
