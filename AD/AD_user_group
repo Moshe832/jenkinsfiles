@@ -3,7 +3,7 @@ pipeline {
 
     options {
         // Disable the default timeout for the pipeline
-        timeout(time: 0, unit: 'MINUTES')
+        timeout(time: 2, unit: 'MINUTES')
     }
 
     environment {
