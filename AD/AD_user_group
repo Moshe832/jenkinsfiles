@@ -58,14 +58,14 @@ foreach (\$User in \$Users) {
                 Add-ADGroupMember -Identity \$group -Members \$User.SamAccountName -ErrorAction Stop
                 Write-Host " Added \$($User.SamAccountName) to \$group"
             } catch {
-                Write-Warning " Failed to add \$($User.SamAccountName) to \$group: \$_"
+                Write-Warning " Failed to add \$($User.SamAccountName) to \${group} \$_"
             }
         } else {
             try {
                 Remove-ADGroupMember -Identity \$group -Members \$User.SamAccountName -Confirm:\$false -ErrorAction Stop
                 Write-Host " Removed \$($User.SamAccountName) from \$group"
             } catch {
-                Write-Warning " Failed to remove \$($User.SamAccountName) from \$group: \$_"
+                Write-Warning " Failed to remove \$($User.SamAccountName) from \${group} \$_"
             }
         }
     }
