@@ -1,0 +1,125 @@
+pipeline {
+    agent { label 'windows' }
+
+    parameters {
+        string(name: 'SamAccountName', description: 'Account name', defaultValue: 'john')
+        string(name: 'UserName', description: 'Username (e.g., john.doe)', defaultValue: 'john.doe')
+        string(name: 'GroupName', description: 'Group name', defaultValue: 'admin-server1,admin-server2')
+        string(name: 'StartDate', description: 'Start date (yyyy-MM-dd)', defaultValue: '2023-10-01')
+    }
+
+    environment {
+        GIT_USER = 'moshe.cohen'
+        GIT_EMAIL = 'moshe@example.com'
+        GIT_CREDENTIALS_ID = 'e081ec0d-a4eb-42cc-865b-911e79062935'
+        jsonFilePath = "${env.WORKSPACE}\\userAccessList.json"
+        jsonFile = 'userAccessList.json'
+        UpdateJsonTmp = "${env.WORKSPACE}@tmp"
+        date = "${env.StartDate}"
+        dateFormat = 'yyyy-MM-dd'
+    }
+
+    options {
+        timeout(time: 300, unit: 'SECONDS')
+    }
+
+    stages {
+        stage('Echo Workspace') {
+            steps {
+                script {
+                    echo "The workspace directory is: ${env.WORKSPACE}"
+                    echo "The current directory is: ${pwd()}"
+                    echo "The JSON file path is: ${env.jsonFilePath}"
+                    echo "The UpdateJsonTmp file path is: ${env.UpdateJsonTmp}"
+                    echo "The date is: ${env.date}"
+                    echo "The date format is: ${env.dateFormat}"
+                    echo "Group Names: ${params.GroupName}"
+                    echo "GIT_CREDENTIALS_ID is: ${env.GIT_CREDENTIALS_ID}"
+                    echo "jsonFile is: ${env.jsonFile}"
+                }
+            }
+        }
+
+        stage('Append to JSON') {
+            steps {
+                powershell '''
+                    $samAccountName = $env:SamAccountName
+                    $userName = $env:UserName
+                    $groupNameRaw = $env:GroupName
+                    $startDate = $env:StartDate
+
+                    # Convert comma-separated GroupName string into array
+                    $groupName = $groupNameRaw -split ',' | ForEach-Object { $_.Trim() }
+
+                    $jsonFilePath = "$env:jsonFilePath"
+
+                    if (Test-Path $jsonFilePath) {
+                        $existingJsonRaw = Get-Content $jsonFilePath -Raw | ConvertFrom-Json
+                        if ($existingJsonRaw -is [System.Collections.IEnumerable]) {
+                            $existingJson = @($existingJsonRaw)
+                        } else {
+                            $existingJson = @($existingJsonRaw)
+                        }
+                    } else {
+                        $existingJson = @()
+                    }
+
+                    $newUser = [PSCustomObject]@{
+                        SamAccountName = $samAccountName
+                        UserName       = $userName
+                        GroupName      = $groupName
+                        StartDate      = $startDate
+                    }
+
+                    $updatedJson = $existingJson + @($newUser)
+
+                    $updatedJson | ConvertTo-Json -Depth 3 | Out-File -FilePath $jsonFilePath -Encoding UTF8
+
+                    Write-Host "Appended new user to JSON:"
+                    $newUser | ConvertTo-Json -Depth 3
+                '''
+            }
+        }
+
+        stage('Upload JSON to Repo') {
+            steps {
+                script {
+                    echo 'Uploading JSON file to GitHub repository'
+                    echo "Using GIT_CREDENTIALS_ID: ${env.GIT_CREDENTIALS_ID}"
+                    echo "JSON file path: ${env.jsonFilePath}"
+                    echo "JSON file name: ${env.jsonFile}"
+
+                    withCredentials([usernamePassword(credentialsId: env.GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                        powershell """
+                            cd '${env.WORKSPACE}'
+                            \$username = "moshe832"
+                            \$password = \$env:GIT_PASSWORD
+                            \$jsonFile = \$env:jsonFile
+
+                            git config user.name "\$username"
+                            git config user.email "Moshe832@gmail.com"
+                            \$url = "https://\${username}:\${password}@github.com/Moshe832/jenkinsfiles.git"
+                            git remote set-url origin \$url
+                            git checkout main
+                            git stash
+                            git pull origin main
+                            git stash pop
+
+                            if (Test-Path "\$jsonFile") {
+                                git add "\$jsonFile"
+                                git commit -m "Updated \$jsonFile"
+                                if (\$LASTEXITCODE -ne 0) {
+                                    Write-Host "No changes to commit"
+                                }
+                                git push origin main
+                            } else {
+                                Write-Host "File \$jsonFile does not exist."
+                                exit 1
+                            }
+                        """
+                    }
+                }
+            }
+        }
+    }
+}
