@@ -3,7 +3,7 @@
         "SamAccountName":  "Alice",
         "UserName":  "alice.smith",
         "GroupName":  [
-                          "admin-server1,admin-server2"
+                          "admin-server1","admin-server2"
                       ],
         "StartDate":  "2023-05-26"
     }
