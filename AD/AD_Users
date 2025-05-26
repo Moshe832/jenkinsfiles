@@ -51,10 +51,10 @@ pipeline {
                    
 
                         # Convert comma-separated GroupName to array
-                            $groupName = ($groupNameRaw -split '\s*,\s*') | ForEach-Object { $_.Trim() }
+                            \$groupName = (\$groupNameRaw -split '\\s*,\\s*') | ForEach-Object { \$_.Trim() }
 
                             # Show formatted JSON output
-                            $formattedGroupNameJson = $groupName | ConvertTo-Json -Compress
+                            \$formattedGroupNameJson = \$groupName | ConvertTo-Json -Compress
                             Write-Host "Formatted JSON array: $formattedGroupNameJson"
 
 
