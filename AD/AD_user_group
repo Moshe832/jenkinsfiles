@@ -1,5 +1,10 @@
 pipeline {
-    agent any  // Run this pipeline on any available Jenkins agent (node)
+        agent { label 'windows' }
+
+    options {
+        // Disable the default timeout for the pipeline
+        timeout(time: 0, unit: 'MINUTES')
+    }
 
     environment {
         // Define the name of the JSON file expected in the Jenkins workspace
@@ -40,14 +45,14 @@ pipeline {
                                 # User is not in the group — add them
                                 try {
                                     Add-ADGroupMember -Identity $group -Members $user.SamAccountName -ErrorAction Stop
-                                    Write-Host "✅ Added $($user.SamAccountName) to $group"
+                                    Write-Host " Added $($user.SamAccountName) to $group"
                                 } catch {
                                     # Log if the add operation fails
-                                    Write-Warning "❌ Failed to add $($user.SamAccountName) to $group: $_"
+                                    Write-Warning " Failed to add $($user.SamAccountName) to $group: $_"
                                 }
                             } else {
                                 # User is already in the group — no action needed
-                                Write-Host "ℹ️  $($user.SamAccountName) already in $group"
+                                Write-Host " $($user.SamAccountName) already in $group"
                             }
                         }
                         else {
@@ -56,32 +61,20 @@ pipeline {
                                 try {
                                     # Remove the user from the group (skip confirmation prompt)
                                     Remove-ADGroupMember -Identity $group -Members $user.SamAccountName -Confirm:$false -ErrorAction Stop
-                                    Write-Host "🗑️ Removed $($user.SamAccountName) from $group"
+                                    Write-Host " Removed $($user.SamAccountName) from $group"
                                 } catch {
                                     # Log if the remove operation fails
-                                    Write-Warning "❌ Failed to remove $($user.SamAccountName) from $group: $_"
+                                    Write-Warning " Failed to remove $($user.SamAccountName) from $group: $_"
                                 }
                             } else {
                                 # User is not in the group already — no removal needed
-                                Write-Host "ℹ️  $($user.SamAccountName) not in $group — no action needed"
+                                Write-Host "  $($user.SamAccountName) not in $group — no action needed"
                             }
                         }
                     }
                 }
-                '''
-            }
-        }
-    }
-
-    post {
-        // If pipeline fails, log a failure message
-        failure {
-            Write-Output '❌ Pipeline failed. Check PowerShell output for details.'
-        }
-
-        // If pipeline succeeds, confirm success
-        success {
-            Write-Output '✅ Group membership operations completed successfully.'
-        }
-    }
-}
+                                '''
+                            }
+                        }
+                    }
+                }
