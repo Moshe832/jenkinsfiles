@@ -13,7 +13,7 @@ pipeline {
         GIT_EMAIL = 'moshe@example.com'
         GIT_CREDENTIALS_ID = 'e081ec0d-a4eb-42cc-865b-911e79062935'  // stored Jenkins credentials
         jsonFilePath = "${env.WORKSPACE}\\userAccessList.json"
-        jsonFile = "userAccessList.json"
+        jsonFile = 'userAccessList.json'
         UpdateJsonTmp = "${env.WORKSPACE}@tmp"
         date = "${env.StartDate}"
         dateFormat = 'yyyy-MM-dd'
@@ -22,8 +22,6 @@ pipeline {
     options {
         timeout(time: 300, unit: 'SECONDS')
     }
-
-
 
     stages {
         stage('Echo Workspace') {
@@ -42,7 +40,6 @@ pipeline {
                 }
             }
         }
-
 
         stage('Append to JSON') {
             steps {
@@ -95,16 +92,14 @@ pipeline {
 
         stage('Upload JSON to Repo') {
             steps {
-                 
                 script {
-                    echo "Uploading JSON file to GitHub repository" 
+                    echo 'Uploading JSON file to GitHub repository'
                     echo "Using GIT_CREDENTIALS_ID: ${env.GIT_CREDENTIALS_ID}"
                     echo "JSON file path: ${env.jsonFilePath}"
                     echo "JSON file name: ${env.jsonFile}"
-        
 
-                withCredentials([usernamePassword(credentialsId:"${env.GIT_CREDENTIALS_ID}", usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-    powershell """
+                    withCredentials([usernamePassword(credentialsId:"${env.GIT_CREDENTIALS_ID}", usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                        powershell """
        cd '${env.WORKSPACE}'
         \$username = "moshe832"
         \$password = \$env:GIT_PASSWORD
@@ -125,7 +120,7 @@ pipeline {
 
                 # החזר שינויים זמניים
                 git stash pop
-     
+
         if (Test-Path "\$jsonFile") {
             git add "\$jsonFile"
             git commit -m "Updated \$jsonFile"
@@ -139,14 +134,10 @@ pipeline {
             exit 1
         }
     """
-}
+                    }
 
-
-
-                }
-                    
                 }
             }
         }
-
     }
+}

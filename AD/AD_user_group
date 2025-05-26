@@ -76,12 +76,12 @@ pipeline {
     post {
         // If pipeline fails, log a failure message
         failure {
-            echo '❌ Pipeline failed. Check PowerShell output for details.'
+            Write-Output '❌ Pipeline failed. Check PowerShell output for details.'
         }
 
         // If pipeline succeeds, confirm success
         success {
-            echo '✅ Group membership operations completed successfully.'
+            Write-Output '✅ Group membership operations completed successfully.'
         }
     }
 }
