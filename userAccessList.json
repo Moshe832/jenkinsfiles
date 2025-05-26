@@ -1,32 +1,5 @@
 ﻿[
     {
-        "SamAccountName":  "Alice",
-        "UserName":  "alice.smith",
-        "GroupName":  [
-                          "admin-server1",
-                          "admin-server2"
-                      ],
-        "StartDate":  "2025-05-26"
-    },
-    {
-        "SamAccountName":  "Bob",
-        "UserName":  "Bob.Jones",
-        "GroupName":  "admin-server1,admin-server2",
-        "StartDate":  "2025-05-26"
-    },
-    {
-        "SamAccountName":  "Bob",
-        "UserName":  "Bob.Jones",
-        "GroupName":  "\"admin-server1\",\"admin-server2\"",
-        "StartDate":  "2025-05-26"
-    },
-    {
-        "SamAccountName":  "Bob",
-        "UserName":  "Bob.Jones",
-        "GroupName":  "admin-server1 admin-server2",
-        "StartDate":  "2025-05-26"
-    },
-    {
         "SamAccountName":  "Bob",
         "UserName":  "Bob.Jones",
         "GroupName":  [
