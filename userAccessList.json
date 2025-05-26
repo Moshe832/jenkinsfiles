@@ -20,5 +20,21 @@
                           "admins,users"
                       ],
         "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "john",
+        "UserName":  "john.doe",
+        "GroupName":  [
+                          "admins,users"
+                      ],
+        "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "Alice",
+        "UserName":  "alice.smith",
+        "GroupName":  [
+                          "admin-server1,admin-server2"
+                      ],
+        "StartDate":  "2023-05-26"
     }
 ]
