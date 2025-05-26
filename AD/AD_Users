@@ -43,40 +43,40 @@ pipeline {
         stage('Append to JSON') {
             steps {
                 powershell '''
-                    $samAccountName = $env:SamAccountName
-                    $userName = $env:UserName
-                    $groupNameRaw = $env:GroupName
-                    $startDate = $env:StartDate
+                    $samAccountName = \$env:SamAccountName
+                    \$userName = \$env:UserName
+                    \$groupNameRaw = \$env:GroupName
+                    \$startDate = \$env:StartDate
 
                     # Convert comma-separated GroupName string into array
-                    $groupName = $groupNameRaw -split ',' | ForEach-Object { $_.Trim() }
+                    \$groupName = \$groupNameRaw -split ', ' | ForEach-Object { \$_.Trim() }
 
-                    $jsonFilePath = "$env:jsonFilePath"
+                    \$jsonFilePath = "\$env:jsonFilePath"
 
-                    if (Test-Path $jsonFilePath) {
-                        $existingJsonRaw = Get-Content $jsonFilePath -Raw | ConvertFrom-Json
-                        if ($existingJsonRaw -is [System.Collections.IEnumerable]) {
-                            $existingJson = @($existingJsonRaw)
+                    if (Test-Path \$jsonFilePath) {
+                        \$existingJsonRaw = Get-Content \$jsonFilePath -Raw | ConvertFrom-Json
+                        if (\$existingJsonRaw -is [System.Collections.IEnumerable]) {
+                            \$existingJson = @(\$existingJsonRaw)
                         } else {
-                            $existingJson = @($existingJsonRaw)
+                            \$existingJson = @(\$existingJsonRaw)
                         }
                     } else {
-                        $existingJson = @()
+                        \$existingJson = @()
                     }
 
-                    $newUser = [PSCustomObject]@{
-                        SamAccountName = $samAccountName
-                        UserName       = $userName
-                        GroupName      = $groupName
-                        StartDate      = $startDate
+                    \$newUser = [PSCustomObject]@{
+                        SamAccountName = \$samAccountName
+                        UserName       = \$userName
+                        GroupName      = \$groupName
+                        StartDate      = \$startDate
                     }
 
-                    $updatedJson = $existingJson + @($newUser)
+                    \$updatedJson = \$existingJson + @(\$newUser)
 
-                    $updatedJson | ConvertTo-Json -Depth 3 | Out-File -FilePath $jsonFilePath -Encoding UTF8
+                    \$updatedJson | ConvertTo-Json -Depth 3 | Out-File -FilePath \$jsonFilePath -Encoding UTF8
 
                     Write-Host "Appended new user to JSON:"
-                    $newUser | ConvertTo-Json -Depth 3
+                    \$newUser | ConvertTo-Json -Depth 3
                 '''
             }
         }
