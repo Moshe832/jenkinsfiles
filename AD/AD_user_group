@@ -17,7 +17,7 @@ pipeline {
                 // Run PowerShell commands inside this step
                 powershell '''
                 if (!(Test-Path "\$env:WORKSPACE\\userAccessList.json")) {
-    Write-Error "❌ JSON file not found at \$env:WORKSPACE\\userAccessList.json"
+    Write-Error " JSON file not found at \$env:WORKSPACE\\userAccessList.json"
     exit 1
 }
 
@@ -25,7 +25,7 @@ pipeline {
 
 foreach (\$User in \$Users) {
     Write-Host "------------------------------"
-    Write-Host "📌 Processing User:"
+    Write-Host " Processing User:"
     Write-Host "SamAccountName: \$($User.SamAccountName)"
     Write-Host "UserName:       \$($User.UserName)"
     Write-Host "GroupName:      \$($User.GroupName)"
@@ -45,7 +45,7 @@ foreach (\$User in \$Users) {
             \$groups += \$g -split ', '
         }
     } else {
-        Write-Warning "⚠️ Invalid GroupName format for user \$($User.SamAccountName)"
+        Write-Warning " Invalid GroupName format for user \$($User.SamAccountName)"
         continue
     }
 
@@ -56,16 +56,16 @@ foreach (\$User in \$Users) {
         if (\$daysDiff -le 30) {
             try {
                 Add-ADGroupMember -Identity \$group -Members \$User.SamAccountName -ErrorAction Stop
-                Write-Host "✅ Added \$($User.SamAccountName) to \$group"
+                Write-Host " Added \$($User.SamAccountName) to \$group"
             } catch {
-                Write-Warning "❌ Failed to add \$($User.SamAccountName) to \$group: \$_"
+                Write-Warning " Failed to add \$($User.SamAccountName) to \$group: \$_"
             }
         } else {
             try {
                 Remove-ADGroupMember -Identity \$group -Members \$User.SamAccountName -Confirm:\$false -ErrorAction Stop
-                Write-Host "✅ Removed \$($User.SamAccountName) from \$group"
+                Write-Host " Removed \$($User.SamAccountName) from \$group"
             } catch {
-                Write-Warning "❌ Failed to remove \$($User.SamAccountName) from \$group: \$_"
+                Write-Warning " Failed to remove \$($User.SamAccountName) from \$group: \$_"
             }
         }
     }
