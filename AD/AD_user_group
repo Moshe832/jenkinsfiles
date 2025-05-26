@@ -53,6 +53,9 @@ foreach (\$User in \$Users) {
         if ([string]::IsNullOrWhiteSpace(\$group)) { continue }
         \$group = \$group.Trim()
 
+   # Convert to full Distinguished Name
+        $group = "CN=$($group.Trim()),OU=group,DC=corp,DC=local"
+
         if (\$daysDiff -le 30) {
             try {
                 Add-ADGroupMember -Identity \$group -Members \$User.SamAccountName -ErrorAction Stop
