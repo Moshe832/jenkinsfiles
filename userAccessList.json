@@ -1,69 +1,133 @@
 ﻿[
-<<<<<<< HEAD
-
-=======
     {
-        "SamAccountName":  "Bob",
-        "UserName":  "Bob.Jones",
-        "GroupName":  [
-                          "admin-server1",
-                          "admin-server2"
-                      ],
-        "StartDate":  "2025-05-26"
+        "UserName":  "yosi.cohen",
+        "GroupName":  "ADMIN-123456B",
+        "StartDate":  "2025-04-15"
     },
     {
-        "SamAccountName":  "Bob",
-        "UserName":  "Bob.Jones",
-        "GroupName":  [
-                          "admin-server1",
-                          "admin-server2"
-                      ],
-        "StartDate":  "2025-05-26"
+        "UserName":  "tamar.levi",
+        "GroupName":  "ADMIN-123457B",
+        "StartDate":  "2025-05-01"
     },
     {
-        "SamAccountName":  "BoE",
-        "UserName":  "Bob.JoneW",
-        "GroupName":  [
-                          "admin-server1",
-                          "admin-server2"
-                      ],
-        "StartDate":  "2025-05-26"
+        "UserName":  "Moshe.Cohen",
+        "GroupName":  "ADMIN-123457B",
+        "StartDate":  "2025-05-01"
     },
     {
-        "SamAccountName":  "BoQ",
-        "UserName":  "Bob.JonQs",
-        "GroupName":  [
-                          "admin-server1",
-                          "admin-server2"
-                      ],
-        "StartDate":  "2025-05-26"
+        "UserName":  "limor.Cohen",
+        "GroupName":  "ADMIN-1234k78",
+        "StartDate":  "2025-05-01"
     },
     {
-        "SamAccountName":  "lee",
-        "UserName":  "carol.lee",
-        "GroupName":  [
-                          "admin-server1",
-                          "admin-server2"
-                      ],
-        "StartDate":  "2025-05-26"
+        "UserName":  "dada.cohen",
+        "GroupName":  "ADMIN-1234J78",
+        "StartDate":  "2025-05-01"
     },
     {
-        "SamAccountName":  "david",
-        "UserName":  "david.kim",
-        "GroupName":  [
-                          "admin-server1",
-                          "admin-server2"
-                      ],
-        "StartDate":  "2025-05-26"
+        "UserName":  "tamar.chong",
+        "GroupName":  "ADMIN-1234S78",
+        "StartDate":  "2025-05-01"
     },
     {
-        "SamAccountName":  "david.kim",
-        "UserName":  "david.kim",
-        "GroupName":  [
-                          "admin-server1",
-                          "admin-server2"
-                      ],
-        "StartDate":  "2025-05-26"
+        "UserName":  "Moshe.haim",
+        "GroupName":  "ADMIN-1234S78",
+        "StartDate":  "2025-05-01"
+    },
+    {
+        "SamAccountName":  "john",
+        "UserName":  "john.doe",
+        "GroupName":  "admins",
+        "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "www",
+        "UserName":  "john.ww",
+        "GroupName":  "admins",
+        "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "ds",
+        "UserName":  "john.doe",
+        "GroupName":  "admins",
+        "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "john",
+        "UserName":  "john.doe",
+        "GroupName":  "admins",
+        "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "john",
+        "UserName":  "john.doe",
+        "GroupName":  "admins",
+        "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "john",
+        "UserName":  "john.doe",
+        "GroupName":  "admins",
+        "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "john",
+        "UserName":  "john.doe",
+        "GroupName":  "admins",
+        "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "john",
+        "UserName":  "john.doe",
+        "GroupName":  "admins",
+        "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "john",
+        "UserName":  "john.doe",
+        "GroupName":  "admins",
+        "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "john",
+        "UserName":  "john.doe",
+        "GroupName":  "admins",
+        "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "john",
+        "UserName":  "john.doe",
+        "GroupName":  "admins",
+        "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "john",
+        "UserName":  "john.doe",
+        "GroupName":  "admins",
+        "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "pou",
+        "UserName":  "john.pou",
+        "GroupName":  "admins",
+        "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "john",
+        "UserName":  "john.doe",
+        "GroupName":  "admins",
+        "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "john",
+        "UserName":  "john.doe",
+        "GroupName":  "admins",
+        "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "mosh",
+        "UserName":  "john.moss",
+        "GroupName":  "admins,aaa,ddda,adad",
+        "StartDate":  "2023-10-01"
     }
->>>>>>> 2bcc81ea514cbdcc49c7225772cbf4102411b317
 ]
