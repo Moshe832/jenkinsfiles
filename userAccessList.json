@@ -1,8 +1,11 @@
 ﻿[
     {
-        "SamAccountName":  "mosh",
-        "UserName":  "john.moss",
-        "GroupName":  "admins,aaa,ddda,adad",
+        "SamAccountName":  "david.kim",
+        "UserName":  "david.kim",
+        "GroupName":  [
+                          "admin-server1",
+                          "admin-server2"
+                      ],
         "StartDate":  "2023-10-01"
     },
     {
