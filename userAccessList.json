@@ -16,5 +16,14 @@
                           "admin-server2"
                       ],
         "StartDate":  "2025-05-26"
+    },
+    {
+        "SamAccountName":  "paul.hall",
+        "UserName":  "paul.hall",
+        "GroupName":  [
+                          "admin-server1",
+                          "admin-server2"
+                      ],
+        "StartDate":  "2025-05-26"
     }
 ]
