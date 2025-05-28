@@ -1,9 +1,17 @@
 ﻿[
-
     {
         "SamAccountName":  "mosh",
         "UserName":  "john.moss",
         "GroupName":  "admins,aaa,ddda,adad",
         "StartDate":  "2023-10-01"
+    },
+    {
+        "SamAccountName":  "frank.wilson",
+        "UserName":  "frank.wilson",
+        "GroupName":  [
+                          "admin-server1",
+                          "admin-server2"
+                      ],
+        "StartDate":  "2025-05-26"
     }
 ]
