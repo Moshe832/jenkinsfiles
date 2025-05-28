@@ -144,7 +144,7 @@ pipeline {
                                          } catch (e) {
                                         echo "Failed to trigger job: ${e.message}"
                                         currentBuild.result = 'FAILURE'
-                                    }
+                                    } 
                                 }
                             }
                         }
