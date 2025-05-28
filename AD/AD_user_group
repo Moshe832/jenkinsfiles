@@ -16,67 +16,84 @@ pipeline {
             steps {
                 // Run PowerShell commands inside this step
                 powershell '''
-                if (!(Test-Path "\$env:WORKSPACE\\userAccessList.json")) {
-    Write-Error " JSON file not found at \$env:WORKSPACE\\userAccessList.json"
-    exit 1
-}
+                            if (!(Test-Path "\$env:WORKSPACE\\userAccessList.json")) {
+                Write-Error " JSON file not found at \$env:WORKSPACE\\userAccessList.json"
+                exit 1
+            }
 
-\$Users = Get-Content "\$env:WORKSPACE\\userAccessList.json" | ConvertFrom-Json
+            \$Users = Get-Content "\$env:WORKSPACE\\userAccessList.json" | ConvertFrom-Json
 
-foreach (\$User in \$Users) {
-    Write-Host "------------------------------"
-    Write-Host " Processing User:"
-    Write-Host "SamAccountName: \$($User.SamAccountName)"
-    Write-Host "UserName:       \$($User.UserName)"
-    Write-Host "GroupName:      \$($User.GroupName)"
-    Write-Host "StartDate:      \$($User.StartDate)"
-    Write-Host "------------------------------"
+            foreach (\$User in \$Users) {
+                Write-Host "------------------------------"
+                Write-Host " Processing User:"
+                Write-Host "SamAccountName: \$($User.SamAccountName)"
+                Write-Host "UserName:       \$($User.UserName)"
+                Write-Host "GroupName:      \$($User.GroupName)"
+                Write-Host "StartDate:      \$($User.StartDate)"
+                Write-Host "------------------------------"
 
-    \$today = Get-Date
-    \$startDate = [datetime]::Parse(\$User.StartDate)
-    \$daysDiff = (\$today - \$startDate).Days
+                \$today = Get-Date
+                \$startDate = [datetime]::Parse(\$User.StartDate)
+                \$daysDiff = (\$today - \$startDate).Days
 
-    \$groupsRaw = \$User.GroupName
-    if (\$groupsRaw -is [String]) {
-        \$groups = \$groupsRaw -split ', '
-    } elseif (\$groupsRaw -is [System.Array]) {
-        \$groups = @()
-        foreach (\$g in \$groupsRaw) {
-            \$groups += \$g -split ', '
+                \$groupsRaw = \$User.GroupName
+                if (\$groupsRaw -is [String]) {
+                    \$groups = \$groupsRaw -split ', '
+                } elseif (\$groupsRaw -is [System.Array]) {
+                    \$groups = @()
+                    foreach (\$g in \$groupsRaw) {
+                        \$groups += \$g -split ', '
+                    }
+                } else {
+                    Write-Warning " Invalid GroupName format for user \$($User.SamAccountName)"
+                    continue
+                }
+
+                foreach (\$group in \$groups) {
+                    if ([string]::IsNullOrWhiteSpace(\$group)) { continue }
+                    \$group = \$group.Trim()
+
+            # Convert to full Distinguished Name
+                    $group = "CN=$($group.Trim()),OU=group,DC=corp,DC=local"
+
+                    if (\$daysDiff -le 30) {
+                        try {
+                            Add-ADGroupMember -Identity \$group -Members \$User.SamAccountName -ErrorAction Stop
+                            Write-Host " Added \$($User.SamAccountName) to \$group"
+                        } catch {
+                            Write-Warning " Failed to add \$($User.SamAccountName) to \${group} \$_"
+                        }
+                    } else {
+                        try {
+                            Remove-ADGroupMember -Identity \$group -Members \$User.SamAccountName -Confirm:\$false -ErrorAction Stop
+                            Write-Host " Removed \$($User.SamAccountName) from \$group"
+                        } catch {
+                            Write-Warning " Failed to remove \$($User.SamAccountName) from \${group} \$_"
+                        }
+                    }
+                }
+            }
+
+                        
+                                            '''
+            }
         }
-    } else {
-        Write-Warning " Invalid GroupName format for user \$($User.SamAccountName)"
-        continue
+        
+   
+    }
+    post {
+        always {
+            // Archive the JSON file for reference
+            archiveArtifacts artifacts: 'userAccessList.json', allowEmptyArchive: true
+            echo 'Cleaning up workspace'
+            cleanWs()
+        }
+        success {
+            echo 'Pipeline completed successfully.'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
     }
 
-    foreach (\$group in \$groups) {
-        if ([string]::IsNullOrWhiteSpace(\$group)) { continue }
-        \$group = \$group.Trim()
-
-   # Convert to full Distinguished Name
-        $group = "CN=$($group.Trim()),OU=group,DC=corp,DC=local"
-
-        if (\$daysDiff -le 30) {
-            try {
-                Add-ADGroupMember -Identity \$group -Members \$User.SamAccountName -ErrorAction Stop
-                Write-Host " Added \$($User.SamAccountName) to \$group"
-            } catch {
-                Write-Warning " Failed to add \$($User.SamAccountName) to \${group} \$_"
-            }
-        } else {
-            try {
-                Remove-ADGroupMember -Identity \$group -Members \$User.SamAccountName -Confirm:\$false -ErrorAction Stop
-                Write-Host " Removed \$($User.SamAccountName) from \$group"
-            } catch {
-                Write-Warning " Failed to remove \$($User.SamAccountName) from \${group} \$_"
-            }
-        }
-    }
-}
-
-            
-                                '''
-            }
-        }
-    }
 }
