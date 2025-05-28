@@ -109,11 +109,14 @@ pipeline {
         git config user.email "Moshe832@gmail.com"
         \$url = "https://\${username}:\${password}@github.com/Moshe832/jenkinsfiles.git"
         git remote set-url origin \$url
-                # ודא שאתה לא ב-detached HEAD
-                git checkout main
+
 
                 # שמור שינויים זמניים אם יש
                 git stash
+                # ודא שאתה לא ב-detached HEAD
+                git checkout main
+
+
 
                 # משוך עדכונים מה-remote
                 git pull origin main
