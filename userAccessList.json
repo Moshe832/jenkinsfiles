@@ -1,3 +1,69 @@
 ﻿[
+<<<<<<< HEAD
 
+=======
+    {
+        "SamAccountName":  "Bob",
+        "UserName":  "Bob.Jones",
+        "GroupName":  [
+                          "admin-server1",
+                          "admin-server2"
+                      ],
+        "StartDate":  "2025-05-26"
+    },
+    {
+        "SamAccountName":  "Bob",
+        "UserName":  "Bob.Jones",
+        "GroupName":  [
+                          "admin-server1",
+                          "admin-server2"
+                      ],
+        "StartDate":  "2025-05-26"
+    },
+    {
+        "SamAccountName":  "BoE",
+        "UserName":  "Bob.JoneW",
+        "GroupName":  [
+                          "admin-server1",
+                          "admin-server2"
+                      ],
+        "StartDate":  "2025-05-26"
+    },
+    {
+        "SamAccountName":  "BoQ",
+        "UserName":  "Bob.JonQs",
+        "GroupName":  [
+                          "admin-server1",
+                          "admin-server2"
+                      ],
+        "StartDate":  "2025-05-26"
+    },
+    {
+        "SamAccountName":  "lee",
+        "UserName":  "carol.lee",
+        "GroupName":  [
+                          "admin-server1",
+                          "admin-server2"
+                      ],
+        "StartDate":  "2025-05-26"
+    },
+    {
+        "SamAccountName":  "david",
+        "UserName":  "david.kim",
+        "GroupName":  [
+                          "admin-server1",
+                          "admin-server2"
+                      ],
+        "StartDate":  "2025-05-26"
+    },
+    {
+        "SamAccountName":  "david.kim",
+        "UserName":  "david.kim",
+        "GroupName":  [
+                          "admin-server1",
+                          "admin-server2"
+                      ],
+        "StartDate":  "2025-05-26"
+    }
+>>>>>>> 2bcc81ea514cbdcc49c7225772cbf4102411b317
 ]
