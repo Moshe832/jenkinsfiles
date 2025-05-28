@@ -48,15 +48,12 @@ pipeline {
                     \$groupNameRaw = \$env:GroupName
                     \$startDate = \$env:StartDate
 
-                   
-
                         # Convert comma-separated GroupName to array
                             \$groupName = (\$groupNameRaw -split '\\s*,\\s*') | ForEach-Object { \$_.Trim() }
 
                             # Show formatted JSON output
                             \$formattedGroupNameJson = \$groupName | ConvertTo-Json -Compress
                             Write-Host "Formatted JSON array: $formattedGroupNameJson"
-
 
                     \$jsonFilePath = "\$env:jsonFilePath"
 
@@ -128,5 +125,43 @@ pipeline {
                 }
             }
         }
+
+        stage('Trigger Job and Handle Result') {
+            steps {
+                script {
+                    try {
+                        def result = build job: 'group', wait: true
+                        echo "Job triggered successfully: ${result.getResult()}"
+                                         } catch (e) {
+                        echo "Failed to trigger job: ${e.message}"
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
+            }
+        }
+
+
     }
+
+    post {
+        always {
+            script {
+                echo "Pipeline completed with result: ${currentBuild.result}"
+                echo 'Cleaning up workspace'
+                cleanWs()
+            }
+        }
+        success {
+            script {
+                echo "Pipeline succeeded!"
+            }
+        }
+        failure {
+            script {
+                echo "Pipeline failed!"
+            }
+        }
+    }
+
 }
+
