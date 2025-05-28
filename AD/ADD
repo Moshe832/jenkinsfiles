@@ -127,7 +127,7 @@ pipeline {
             if (\$LASTEXITCODE -ne 0) {
                 Write-Host "No changes to commit"
             }
- 
+
             git push origin main
         } else {
             Write-Host "File \$jsonFile does not exist."
@@ -144,7 +144,7 @@ pipeline {
                                          } catch (e) {
                                         echo "Failed to trigger job: ${e.message}"
                                         currentBuild.result = 'FAILURE'
-                                    } 
+                                    }
                                 }
                             }
                         }
