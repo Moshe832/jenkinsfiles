@@ -134,8 +134,21 @@ pipeline {
             exit 1
         }
     """
-                    }
 
+                        stage('Trigger Job and Handle Result') {
+                            steps {
+                                script {
+                                    try {
+                                        def result = build job: 'group', wait: true
+                                        echo "Job triggered successfully: ${result.getResult()}"
+                                         } catch (e) {
+                                        echo "Failed to trigger job: ${e.message}"
+                                        currentBuild.result = 'FAILURE'
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
