@@ -1,0 +1,8 @@
+$rootPath = "C:\Your\Folder\Path"
+$baseDepth = ($rootPath.TrimEnd('\').Split('\').Count)
+
+Get-ChildItem -Path $rootPath -Directory -Recurse |
+Where-Object {
+    ($_.FullName.TrimEnd('\').Split('\').Count -eq ($baseDepth + 3))
+} |
+ForEach-Object { $_.FullName }
