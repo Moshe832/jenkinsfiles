@@ -2,7 +2,7 @@ pipeline {
     agent { label 'windows-agent' }
 
     tools {
-        nodejs 'NodeJS_18'  // השם כפי שהגדרת ב-Jenkins
+        nodejs 'NodeJS_24.4.1'  // השם כפי שהגדרת ב-Jenkins
     }
 
     stages {
