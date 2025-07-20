@@ -16,3 +16,13 @@ if ($html -match "perennial\s*:\s*(\S+)") {
 } else {
     Write-Host "לא נמצא ערך perennial"
 }
+$response = Invoke-WebRequest -Uri "http://yourserver.local/status.aspx"
+$html = $response.Content
+
+if ($html -match "server\s*:\s*(\S+)")    { $server = $matches[1] }
+if ($html -match "status\s*:\s*(\S+)")    { $status = $matches[1] }
+if ($html -match "perennial\s*:\s*(\S+)") { $perennial = $matches[1] }
+
+Write-Host "שרת: $server"
+Write-Host "סטטוס: $status"
+Write-Host "perennial: $perennial"
