@@ -1,0 +1,18 @@
+# מדמה תוכן HTML שמתקבל מהשרת
+$html = @"
+<html>
+  <body>
+    <br>server : aksskas
+    <br>status : online
+    <br>perennial : true
+  </body>
+</html>
+"@
+
+# שליפה בעזרת Regex
+if ($html -match "perennial\s*:\s*(\S+)") {
+    $perennial = $matches[1]
+    Write-Host "perennial: $perennial"
+} else {
+    Write-Host "לא נמצא ערך perennial"
+}
