@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+    stages {
+        stage('Check System Status Page') {
+            steps {
+                script {
+                    def url = 'http://localhost/status'  // Change this to your real status page
+
+                    echo "Fetching system status from: ${url}"
+
+                    def statusText = powershell(returnStdout: true, script: """
+                        try {
+                            \$res = Invoke-WebRequest -Uri '${url}' -UseBasicParsing -TimeoutSec 10
+                            \$res.Content
+                        } catch {
+                            Write-Output 'ERROR'
+                        }
+                    """).trim()
+
+                    echo "Page content: ${statusText}"
+
+                    if (statusText.contains('OFFLINE') || statusText == 'ERROR') {
+                        error("❌ System is OFFLINE or unreachable. Stopping build.")
+                    } else {
+                        echo "✅ System is ONLINE."
+                    }
+                }
+            }
+        }
+    }
+}
