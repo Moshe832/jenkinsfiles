@@ -1,0 +1,64 @@
+def targets = [
+    [label: 'agent1', url: 'http://agent1.local/status'],
+    [label: 'agent2', url: 'http://agent2.local/status'],
+    [label: 'agent3', url: 'http://agent3.local/status']
+]
+
+def results = [:]
+
+pipeline {
+    agent none
+    stages {
+        stage('Check Status on Multiple Agents') {
+            parallel {
+                script {
+                    targets.each { target ->
+                        results["${target.label}"] = {
+                            node(target.label) {
+                                stage("Check on ${target.label}") {
+                                    def content = powershell(returnStdout: true, script: """
+                                        try {
+                                            \$res = Invoke-WebRequest -Uri '${target.url}' -UseBasicParsing -TimeoutSec 10
+                                            \$res.Content
+                                        } catch {
+                                            Write-Output 'ERROR'
+                                        }
+                                    """).trim()
+
+                                    echo "[$target.label] response: ${content}"
+
+                                    if (content.contains('OFFLINE') || content == 'ERROR') {
+                                        currentBuild.result = 'UNSTABLE'
+                                        return "❌ ${target.label}: OFFLINE"
+                                    } else {
+                                        return "✅ ${target.label}: ONLINE"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Send Summary Email') {
+            agent any
+            steps {
+                script {
+                    def report = results.collect { label, closure ->
+                        def result = closure()
+                        return result
+                    }.join("\n")
+
+                    echo "Status report:\n${report}"
+
+                    // Send email
+                    emailext subject: "System Status Report",
+                             body: """<pre>${report}</pre>""",
+                             recipientProviders: [[$class: 'DevelopersRecipientProvider']],
+                             to: "you@example.com"
+                }
+            }
+        }
+    }
+}
