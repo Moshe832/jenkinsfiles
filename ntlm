@@ -1,0 +1,7 @@
+<QueryList>
+  <Query Id="0" Path="Security">
+    <Select Path="Security">
+      *[System[(EventID=4624)]] and *[EventData[Data[@Name='AuthenticationPackageName']='NTLM']]
+    </Select>
+  </Query>
+</QueryList>
