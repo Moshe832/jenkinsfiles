@@ -1,0 +1,60 @@
+Import-Module ActiveDirectory
+
+# ===== Variables =====
+$OU        = "OU=Users,DC=domain,DC=local"
+$GroupName = "GroupX"
+$Password  = "Aa123456!"  # Password compliant with AD policy
+
+# ===== Users list =====
+$Users = @(
+    "user1",
+    "user2",
+    "user3"
+)
+
+foreach ($UserName in $Users) {
+
+    Write-Host "=== Processing user: $UserName ==="
+
+    # Check if user exists
+    $user = Get-ADUser -Filter "SamAccountName -eq '$UserName'" -ErrorAction SilentlyContinue
+
+    if (-not $user) {
+        Write-Host "User not found – creating new user"
+
+        New-ADUser `
+            -Name $UserName `
+            -SamAccountName $UserName `
+            -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) `
+            -Enabled $true `
+            -Path $OU `
+            -ChangePasswordAtLogon $true
+    }
+    else {
+        Write-Host "✅ User already exists"
+    }
+
+    # Check if user is already in the group
+    $IsMember = Get-ADUser $UserName -Properties MemberOf |
+                Select-Object -ExpandProperty MemberOf |
+                Where-Object { $_ -like "*CN=$GroupName,*" }
+
+    if (-not $IsMember) {
+        Add-ADGroupMember -Identity $GroupName -Members $UserName
+        Write-Host "➕ User added to group $GroupName"
+    }
+    else {
+        Write-Host "ℹ️ User is already a member of the group"
+    }
+
+    # Reset password and unlock account
+    Set-ADAccountPassword `
+        -Identity $UserName `
+        -NewPassword (ConvertTo-SecureString $Password -AsPlainText -Force) `
+        -Reset
+
+    Unlock-ADAccount -Identity $UserName
+    Write-Host "🔑 Password updated"
+}
+
+Write-Host "✅ All users processed"
