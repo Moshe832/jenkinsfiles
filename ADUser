@@ -1,0 +1,58 @@
+Import-Module ActiveDirectory
+
+# ===== Variables =====
+$UserName  = "username1"   # Name and SamAccountName
+$OU        = "OU=Users,DC=domain,DC=local"
+$GroupName = "GroupX"      # Group name
+$Password  = "12346"       # New password
+
+# ===== Check if user exists =====
+$user = Get-ADUser -Filter "SamAccountName -eq '$UserName'" -ErrorAction SilentlyContinue
+
+if (-not $user) {
+    Write-Host "User does not exist - creating new user"
+
+    # Convert password to secure string
+    $SecurePass = ConvertTo-SecureString $Password -AsPlainText -Force
+
+    # Create new user
+    New-ADUser `
+        -Name $UserName `
+        -SamAccountName $UserName `
+        -AccountPassword $SecurePass `
+        -Enabled $true `
+        -Path $OU `
+        -ChangePasswordAtLogon $false
+
+    # Reload user after creation
+    $user = Get-ADUser $UserName
+}
+else {
+    Write-Host "User already exists"
+}
+
+# ===== Check and add user to group =====
+$IsMember = Get-ADUser $UserName -Properties MemberOf |
+            Select-Object -ExpandProperty MemberOf |
+            Where-Object { $_ -like "*CN=$GroupName,*" }
+
+if (-not $IsMember) {
+    Add-ADGroupMember -Identity $GroupName -Members $UserName
+    Write-Host "User added to group $GroupName"
+}
+else {
+    Write-Host "User is already a member of the group"
+}
+
+# ===== Reset password =====
+$SecurePass = ConvertTo-SecureString $Password -AsPlainText -Force
+
+Set-ADAccountPassword `
+    -Identity $UserName `
+    -NewPassword $SecurePass `
+    -Reset
+
+# Unlock account if locked
+Unlock-ADAccount -Identity $UserName
+
+Write-Host "Password updated successfully"
