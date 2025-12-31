@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'JSON_FILE', defaultValue: 'C:\\Temp\\TempGroupUsers.json', description: 'Path to JSON file with users and groups')
+    }
+
+    stages {
+        stage('Manage AD Group Membership') {
+            steps {
+                powershell """
+                Import-Module ActiveDirectory
+                \$today = Get-Date
+
+                # Read JSON
+                \$usersList = Get-Content -Path '${params.JSON_FILE}' | ConvertFrom-Json
+
+                foreach (\$entry in \$usersList) {
+                    \$user = \$entry.User
+                    \$group = \$entry.Group
+                    \$addedDate = [datetime]\$entry.Date
+                    \$expiryDate = \$addedDate.AddDays(30)
+
+                    # Check if user is in AD group
+                    \$isMember = Get-ADGroupMember -Identity \$group -Recursive | Where-Object { \$_ .SamAccountName -eq \$user }
+
+                    if (\$expiryDate -ge \$today) {
+                        # Within 30 days: add if not in group
+                        if (-not \$isMember) {
+                            Add-ADGroupMember -Identity \$group -Members \$user
+                            Write-Host "\$user added to \$group (within 30 days)"
+                        } else {
+                            Write-Host "\$user already in \$group (within 30 days)"
+                        }
+                    } else {
+                        # Expired: remove if in group
+                        if (\$isMember) {
+                            Remove-ADGroupMember -Identity \$group -Members \$user -Confirm:\$false
+                            Write-Host "\$user removed from \$group (expired)"
+                        } else {
+                            Write-Host "\$user not in \$group (expired)"
+                        }
+                    }
+                }
+                """
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "AD group management completed successfully."
+        }
+        failure {
+            echo "AD group management failed!"
+        }
+    }
+}
