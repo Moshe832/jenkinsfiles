@@ -1,32 +1,57 @@
 pipeline {
     agent any
 
+    options {
+        // Clean the workspace before starting
+        cleanWs()
+    }
+
     parameters {
-        string(name: 'USERS', defaultValue: 'moshe.cohen dana.lavi eli', description: 'רשימת משתמשים (sAMAccountName), מופרדים ברווח או פסיק, ההפרדה תעשה בקוד')
-        string(name: 'GROUP', defaultValue: 'TestGroup', description: 'שם הקבוצה')
-        string(name: 'DAYS', defaultValue: '30', description: 'מספר ימים לתוקף')
-        string(name: 'JSON_FILE', defaultValue: 'C:\\Temp\\TempGroupUsers.json', description: 'נתיב הקובץ לשמירת JSON')
+        string(name: 'USERS', defaultValue: 'moshe.cohen dana.lavi eli', description: 'List of users (sAMAccountName), separated by space or comma')
+        string(name: 'GROUP', defaultValue: 'TestGroup', description: 'Target group name')
+        string(name: 'DAYS', defaultValue: '30', description: 'Number of days for expiry')
+        string(name: 'JSON_FILE', defaultValue: 'C:\\Temp\\TempGroupUsers.json', description: 'Path to save the JSON file')
     }
 
     stages {
-        stage('Create JSON') {
+        stage('Append Users to JSON') {
             steps {
                 powershell """
-                # קריאה מהפרמטר USERS והפרדה על ידי רווח או פסיק
-                \$usersArray = '${params.USERS}' -split '[ ,]+' | Where-Object { \$_ -ne '' }
+                # Split the USERS parameter by space or comma
+                \$newUsers = '${params.USERS}' -split '[ ,]+' | Where-Object { \$_ -ne '' }
 
-                # יצירת רשימה של אובייקטים
-                \$jsonList = @()
-                foreach (\$user in \$usersArray) {
-                    \$jsonList += @{User=\$user.Trim(); Group='${params.GROUP}'; Days=${params.DAYS}}
+                # Check if JSON file exists
+                if (Test-Path '${params.JSON_FILE}') {
+                    # Load existing JSON
+                    \$jsonList = Get-Content -Path '${params.JSON_FILE}' | ConvertFrom-Json
+                } else {
+                    # Start with empty list if file does not exist
+                    \$jsonList = @()
                 }
 
-                # המרה ל-JSON ושמירה לקובץ
+                # Append new users
+                foreach (\$user in \$newUsers) {
+                    # Avoid duplicates
+                    if (-not (\$jsonList | Where-Object { \$_ .User -eq \$user -and \$_ .Group -eq '${params.GROUP}' })) {
+                        \$jsonList += @{User=\$user.Trim(); Group='${params.GROUP}'; Days=${params.DAYS}}
+                    }
+                }
+
+                # Save updated JSON back to file
                 \$jsonList | ConvertTo-Json -Depth 3 | Out-File -FilePath '${params.JSON_FILE}' -Encoding UTF8
 
-                Write-Host "JSON created at ${params.JSON_FILE}"
+                Write-Host "JSON updated at ${params.JSON_FILE}"
                 """
             }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline completed successfully."
+        }
+        failure {
+            echo "Pipeline failed!"
         }
     }
 }
