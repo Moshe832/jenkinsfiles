@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'USERS', defaultValue: 'moshe.cohen dana.lavi eli', description: 'רשימת משתמשים (sAMAccountName), מופרדים ברווח או פסיק, ההפרדה תעשה בקוד')
+        string(name: 'GROUP', defaultValue: 'TestGroup', description: 'שם הקבוצה')
+        string(name: 'DAYS', defaultValue: '30', description: 'מספר ימים לתוקף')
+        string(name: 'JSON_FILE', defaultValue: 'C:\\Temp\\TempGroupUsers.json', description: 'נתיב הקובץ לשמירת JSON')
+    }
+
+    stages {
+        stage('Create JSON') {
+            steps {
+                powershell """
+                # קריאה מהפרמטר USERS והפרדה על ידי רווח או פסיק
+                \$usersArray = '${params.USERS}' -split '[ ,]+' | Where-Object { \$_ -ne '' }
+
+                # יצירת רשימה של אובייקטים
+                \$jsonList = @()
+                foreach (\$user in \$usersArray) {
+                    \$jsonList += @{User=\$user.Trim(); Group='${params.GROUP}'; Days=${params.DAYS}}
+                }
+
+                # המרה ל-JSON ושמירה לקובץ
+                \$jsonList | ConvertTo-Json -Depth 3 | Out-File -FilePath '${params.JSON_FILE}' -Encoding UTF8
+
+                Write-Host "JSON created at ${params.JSON_FILE}"
+                """
+            }
+        }
+    }
+}
