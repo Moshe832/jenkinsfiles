@@ -1,57 +1,57 @@
 pipeline {
     agent any
 
-    options {
-        // Clean the workspace before starting
-        cleanWs()
-    }
-
     parameters {
         string(name: 'USERS', defaultValue: 'moshe.cohen dana.lavi eli', description: 'List of users (sAMAccountName), separated by space or comma')
         string(name: 'GROUP', defaultValue: 'TestGroup', description: 'Target group name')
-        string(name: 'DAYS', defaultValue: '30', description: 'Number of days for expiry')
         string(name: 'JSON_FILE', defaultValue: 'C:\\Temp\\TempGroupUsers.json', description: 'Path to save the JSON file')
     }
 
+    environment {
+        USERS_LIST = "${params.USERS}"
+        TARGET_GROUP = "${params.GROUP}"
+        JSON_PATH = "${params.JSON_FILE}"
+        TODAY_DATE = "${new Date().format('yyyy-MM-dd')}"
+    }
+
     stages {
-        stage('Append Users to JSON') {
+        stage('Append or Update Users in JSON') {
             steps {
                 powershell """
-                # Split the USERS parameter by space or comma
-                \$newUsers = '${params.USERS}' -split '[ ,]+' | Where-Object { \$_ -ne '' }
+                # Echo environment variables
+                Write-Host "USERS_LIST: ${env.USERS_LIST}"
+                Write-Host "TARGET_GROUP: ${env.TARGET_GROUP}"
+                Write-Host "JSON_PATH: ${env.JSON_PATH}"
+                Write-Host "TODAY_DATE: ${env.TODAY_DATE}"
 
-                # Check if JSON file exists
-                if (Test-Path '${params.JSON_FILE}') {
-                    # Load existing JSON
-                    \$jsonList = Get-Content -Path '${params.JSON_FILE}' | ConvertFrom-Json
+                # Split USERS parameter by space or comma
+                \$newUsers = '${env.USERS_LIST}' -split '[ ,]+' | Where-Object { \$_ -ne '' }
+                \$today = '${env.TODAY_DATE}'
+
+                # Load JSON or start empty
+                if (Test-Path '${env.JSON_PATH}') {
+                    \$jsonList = Get-Content -Path '${env.JSON_PATH}' | ConvertFrom-Json
                 } else {
-                    # Start with empty list if file does not exist
                     \$jsonList = @()
                 }
 
-                # Append new users
                 foreach (\$user in \$newUsers) {
-                    # Avoid duplicates
-                    if (-not (\$jsonList | Where-Object { \$_ .User -eq \$user -and \$_ .Group -eq '${params.GROUP}' })) {
-                        \$jsonList += @{User=\$user.Trim(); Group='${params.GROUP}'; Days=${params.DAYS}}
+                    # Check if user already exists in the JSON for the same group
+                    \$existing = \$jsonList | Where-Object { \$_ .User -eq \$user -and \$_ .Group -eq '${env.TARGET_GROUP}' }
+                    if (\$existing) {
+                        # Update the Date to today
+                        \$existing.Date = \$today
+                    } else {
+                        # Add new entry
+                        \$jsonList += @{User=\$user.Trim(); Group='${env.TARGET_GROUP}'; Date=\$today}
                     }
                 }
 
-                # Save updated JSON back to file
-                \$jsonList | ConvertTo-Json -Depth 3 | Out-File -FilePath '${params.JSON_FILE}' -Encoding UTF8
-
-                Write-Host "JSON updated at ${params.JSON_FILE}"
+                # Save updated JSON
+                \$jsonList | ConvertTo-Json -Depth 3 | Out-File -FilePath '${env.JSON_PATH}' -Encoding UTF8
+                Write-Host "JSON updated at ${env.JSON_PATH}"
                 """
             }
-        }
-    }
-
-    post {
-        success {
-            echo "Pipeline completed successfully."
-        }
-        failure {
-            echo "Pipeline failed!"
         }
     }
 }
