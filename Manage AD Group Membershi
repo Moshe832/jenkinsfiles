@@ -5,7 +5,21 @@ pipeline {
         string(name: 'JSON_FILE', defaultValue: 'C:\\Temp\\TempGroupUsers.json', description: 'Path to JSON file with users and groups')
     }
 
+    environment {
+        JSON_PATH = "${params.JSON_FILE}"
+        TODAY_DATE = "${new Date().format('yyyy-MM-dd')}"
+    }
+
     stages {
+        stage('Echo Parameters') {
+            steps {
+                powershell """
+                Write-Host "JSON_PATH: ${env.JSON_PATH}"
+                Write-Host "TODAY_DATE: ${env.TODAY_DATE}"
+                """
+            }
+        }
+
         stage('Manage AD Group Membership') {
             steps {
                 powershell """
@@ -13,16 +27,16 @@ pipeline {
                 \$today = Get-Date
 
                 # Read JSON
-                \$usersList = Get-Content -Path '${params.JSON_FILE}' | ConvertFrom-Json
+                \$usersList = Get-Content -Path '${env.JSON_PATH}' | ConvertFrom-Json
 
                 foreach (\$entry in \$usersList) {
-                    \$user = \$entry.User
-                    \$group = \$entry.Group
-                    \$addedDate = [datetime]\$entry.Date
+                    \$user = \$entry.User.Trim()
+                    \$group = \$entry.Group.Trim()
+                    \$addedDate = [datetime]\$entry.Date.Trim()
                     \$expiryDate = \$addedDate.AddDays(30)
 
                     # Check if user is in AD group
-                    \$isMember = Get-ADGroupMember -Identity \$group -Recursive | Where-Object { \$_ .SamAccountName -eq \$user }
+                    \$isMember = Get-ADGroupMember -Identity \$group -Recursive | Where-Object { \$_.SamAccountName -eq \$user }
 
                     if (\$expiryDate -ge \$today) {
                         # Within 30 days: add if not in group
@@ -49,10 +63,10 @@ pipeline {
 
     post {
         success {
-            echo "AD group management completed successfully."
+            echo "Pipeline completed successfully."
         }
         failure {
-            echo "AD group management failed!"
+            echo "Pipeline failed!"
         }
     }
 }
