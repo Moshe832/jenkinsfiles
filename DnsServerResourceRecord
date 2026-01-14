@@ -1,0 +1,5 @@
+Get-DnsServerResourceRecord -ZoneName $zoneName -ComputerName $dnsServer | Where-Object { $_.RecordData.IPv4Address -eq "192.196.1.1" } | ForEach-Object {
+   Set-DnsServerResourceRecord -ZoneName $zoneName -ComputerName $dnsServer -Name $_.HostName -RecordType A -Force -NewData @{
+       IPv4Address = "192.196.1.2"  # Replace with the desired new IP address
+   }
+}# This script updates all A records in a specified DNS zone that have the IP address
